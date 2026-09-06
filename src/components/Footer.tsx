@@ -1,32 +1,26 @@
 import React from 'react';
 import { Compass, MessageCircle, ArrowRight } from 'lucide-react';
 import { WHATSAPP_BASE_URL, BRAND_LOGO_URL } from '../data/packages';
+import { useRouter } from '../router';
 
 interface FooterProps {
   onOpenCustomPlan: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenCustomPlan }) => {
+  const { navigate } = useRouter();
+
   const links = [
-    { name: 'Home', href: '#hero' },
-    { name: 'Explore', href: '#why-us' },
-    { name: 'Packages', href: '#packages' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/' },
+    { name: 'All Packages', href: '/packages' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Gallery', href: '/#gallery' },
+    { name: 'Contact', href: '/#contact' },
   ];
 
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      const topOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - topOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
+    navigate(href);
   };
 
   return (
@@ -71,8 +65,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCustomPlan }) => {
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    onClick={(e) => handleSmoothScroll(e, link.href)}
-                    className="hover:text-white transition-colors"
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="hover:text-white transition-colors cursor-pointer"
                   >
                     {link.name}
                   </a>

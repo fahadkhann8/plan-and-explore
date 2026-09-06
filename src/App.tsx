@@ -1,128 +1,106 @@
 import React, { useState } from 'react';
-import { PACKAGES } from './data/packages';
-import { TravelPackage } from './types';
+import { RouterProvider, useRouter } from './router';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { WhyUs } from './components/WhyUs';
-import { ExplorePackages } from './components/ExplorePackages';
-import { PackageDetailExperience } from './components/PackageDetailExperience';
-import { HaveAPlanSection } from './components/HaveAPlanSection';
-import { HowItWorks } from './components/HowItWorks';
-import { AboutSection } from './components/AboutSection';
-import { EditorialGallery } from './components/EditorialGallery';
-import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { CustomPlanModal } from './components/CustomPlanModal';
 import { BookingModal } from './components/BookingModal';
 import { UnderConstructionModal } from './components/UnderConstructionModal';
+import { HomePage } from './pages/HomePage';
+import { PackagesPage } from './pages/PackagesPage';
+import { PackageDetailPage } from './pages/PackageDetailPage';
+import { AboutPage } from './pages/AboutPage';
+import { TravelPackage } from './types';
 
-export default function App() {
-  const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
+function AppContent() {
+  const { currentPath } = useRouter();
   const [customPlanOpen, setCustomPlanOpen] = useState<boolean>(false);
   const [customPlanDestination, setCustomPlanDestination] = useState<string>('Jibhi & Tirthan Valley');
   const [bookingPackage, setBookingPackage] = useState<TravelPackage | null>(null);
 
-  const handleScrollToPackages = () => {
-    const el = document.getElementById('packages');
-    if (el) {
-      const topOffset = 80;
-      const pos = el.getBoundingClientRect().top + window.scrollY - topOffset;
-      window.scrollTo({ top: pos, behavior: 'smooth' });
-    }
-  };
+  // Determine active view based on currentPath
+  const renderCurrentView = () => {
+    // Normalise path (trim trailing slash unless root)
+    const normalized =
+      currentPath.length > 1 && currentPath.endsWith('/')
+        ? currentPath.slice(0, -1)
+        : currentPath;
 
-  const handleScrollToHaveAPlan = () => {
-    const el = document.getElementById('have-a-plan');
-    if (el) {
-      const topOffset = 80;
-      const pos = el.getBoundingClientRect().top + window.scrollY - topOffset;
-      window.scrollTo({ top: pos, behavior: 'smooth' });
-    } else {
-      setCustomPlanOpen(true);
+    // Check for /packages/:id
+    if (normalized.startsWith('/packages/')) {
+      const packageId = normalized.replace('/packages/', '');
+      return (
+        <PackageDetailPage
+          packageId={packageId}
+          onBookPackage={(pkg) => setBookingPackage(pkg)}
+          onOpenCustomPlan={() => setCustomPlanOpen(true)}
+        />
+      );
     }
+
+    // Check for /packages
+    if (normalized === '/packages') {
+      return (
+        <PackagesPage
+          onBookPackage={(pkg) => setBookingPackage(pkg)}
+          onOpenCustomPlan={() => setCustomPlanOpen(true)}
+        />
+      );
+    }
+
+    // Check for /about
+    if (normalized === '/about') {
+      return <AboutPage onOpenCustomPlan={() => setCustomPlanOpen(true)} />;
+    }
+
+    // Default: Home Page
+    return (
+      <HomePage
+        onOpenCustomPlan={() => setCustomPlanOpen(true)}
+        onBookPackage={(pkg) => setBookingPackage(pkg)}
+      />
+    );
   };
 
   return (
     <div className="min-h-screen bg-[#FAFAF7] text-[#0B1F33] selection:bg-[#233E32] selection:text-[#FAFAF7] flex flex-col font-sans">
-      {/* 1. Navigation */}
+      {/* 1. Global Navigation */}
       <Navbar onOpenCustomPlan={() => setCustomPlanOpen(true)} />
 
-      {/* Main Page Flow with Deep Scrolling Journey */}
-      <main className="flex-1">
-        {/* 1. Hero Section (Home) */}
-        <Hero
-          onExploreClick={handleScrollToPackages}
-          onHaveAPlanClick={handleScrollToHaveAPlan}
-          onSelectFeaturedPackage={() => setSelectedPackage(PACKAGES[0])}
-          onBookFeaturedPackage={() => setBookingPackage(PACKAGES[0])}
-        />
+      {/* 2. Active Page Content */}
+      <main className="flex-1">{renderCurrentView()}</main>
 
-        {/* 2. Explore Packages (Package 01, Package 02: Kashmir, Package 03: Manali) - Directly After Home */}
-        <ExplorePackages
-          packages={PACKAGES}
-          onSelectPackage={(pkg) => setSelectedPackage(pkg)}
-          onBookPackage={(pkg) => setBookingPackage(pkg)}
-          onNotifyPackage={(pkg) => {
-            setCustomPlanDestination(pkg.destination);
-            setCustomPlanOpen(true);
-          }}
-        />
-
-        {/* 3. Why Plan & Explore (The Ethos & Why Travel With Us) */}
-        <WhyUs />
-
-        {/* 4. How It Works */}
-        <HowItWorks />
-
-        {/* 5. Have a Plan? Feature Section */}
-        <HaveAPlanSection />
-
-        {/* 6. About Section */}
-        <AboutSection />
-
-        {/* 7. Editorial Travel Gallery */}
-        <EditorialGallery />
-
-        {/* 8. Contact / WhatsApp Direct Section */}
-        <ContactSection onOpenCustomPlan={() => setCustomPlanOpen(true)} />
-      </main>
-
-      {/* 10. Minimalist Premium Footer */}
+      {/* 3. Global Footer */}
       <Footer onOpenCustomPlan={() => setCustomPlanOpen(true)} />
 
-      {/* Mobile Sticky Bar for rapid WhatsApp & Custom Plan engagement */}
+      {/* 4. Mobile Sticky Bar */}
       <MobileStickyBar onOpenCustomPlan={() => setCustomPlanOpen(true)} />
 
-      {/* Full Destination Detail Experience */}
-      {selectedPackage && (
-        <PackageDetailExperience
-          pkg={selectedPackage}
-          onClose={() => setSelectedPackage(null)}
-          onOpenCustomPlan={() => {
-            setSelectedPackage(null);
-            setCustomPlanOpen(true);
-          }}
-          onBookPackage={(pkg) => setBookingPackage(pkg)}
-        />
-      )}
-
-      {/* Have a Plan Bespoke Inquiry Modal */}
+      {/* 5. Custom Plan / Have a Plan Bespoke Inquiry Modal */}
       <CustomPlanModal
         isOpen={customPlanOpen}
         initialDestination={customPlanDestination}
         onClose={() => setCustomPlanOpen(false)}
       />
 
-      {/* Booking Modal with Google Sheet Integration */}
+      {/* 6. Booking Modal with Google Sheet Integration */}
       <BookingModal
         pkg={bookingPackage}
         isOpen={!!bookingPackage}
         onClose={() => setBookingPackage(null)}
       />
 
-      {/* Building Phase / Early Preview Notice Popup */}
+      {/* 7. Building Phase Notice Modal */}
       <UnderConstructionModal />
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <RouterProvider>
+      <AppContent />
+    </RouterProvider>
+  );
+}
+

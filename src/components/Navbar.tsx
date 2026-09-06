@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Compass, Menu, X, ArrowRight, MessageCircle } from 'lucide-react';
 import { WHATSAPP_BASE_URL, BRAND_LOGO_URL } from '../data/packages';
 import { useBodyScrollLock } from '../utils/scrollLock';
+import { useRouter } from '../router';
 
 interface NavbarProps {
   onOpenCustomPlan: () => void;
@@ -11,6 +12,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenCustomPlan }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { currentPath, navigate } = useRouter();
 
   // Centralized body scroll lock for mobile drawer
   useBodyScrollLock(mobileMenuOpen);
@@ -29,27 +31,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCustomPlan }) => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#hero' },
-    { name: 'Packages', href: '#packages' },
-    { name: 'Why Us', href: '#why-us' },
-    { name: 'About', href: '#about' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/' },
+    { name: 'Packages', href: '/packages' },
+    { name: 'About', href: '/about' },
+    { name: 'Gallery', href: '/#gallery' },
+    { name: 'Contact', href: '/#contact' },
   ];
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      const topOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - topOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
+    navigate(href);
   };
 
   return (
@@ -67,9 +59,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCustomPlan }) => {
             {/* Brand Logo */}
             <a
               id="brand-logo"
-              href="#hero"
-              onClick={(e) => handleLinkClick(e, '#hero')}
-              className="group flex items-center gap-3 focus:outline-hidden"
+              href="/"
+              onClick={(e) => handleNavClick(e, '/')}
+              className="group flex items-center gap-3 focus:outline-hidden cursor-pointer"
             >
               {BRAND_LOGO_URL ? (
                 <img
@@ -92,17 +84,33 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCustomPlan }) => {
 
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-8 text-[11px] uppercase tracking-[0.15em] font-medium text-[#0B1F33]">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  id={`nav-link-${link.name.toLowerCase()}`}
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  className="opacity-70 hover:opacity-100 transition-opacity relative py-2.5 px-1 min-h-[44px] inline-flex items-center"
-                >
-                  {link.name}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isActive =
+                  link.href === '/'
+                    ? currentPath === '/'
+                    : link.href.startsWith('/#')
+                    ? false
+                    : currentPath.startsWith(link.href);
+
+                return (
+                  <a
+                    key={link.name}
+                    id={`nav-link-${link.name.toLowerCase()}`}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className={`transition-all relative py-2.5 px-1 min-h-[44px] inline-flex items-center cursor-pointer ${
+                      isActive
+                        ? 'opacity-100 font-bold text-[#5A5A40]'
+                        : 'opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <span>{link.name}</span>
+                    {isActive && (
+                      <span className="absolute bottom-1 left-1 right-1 h-0.5 bg-[#5A5A40] rounded-full" />
+                    )}
+                  </a>
+                );
+              })}
             </nav>
 
             {/* Right Side Actions */}
@@ -199,8 +207,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCustomPlan }) => {
                   <a
                     key={link.name}
                     href={link.href}
-                    onClick={(e) => handleLinkClick(e, link.href)}
-                    className="px-3 py-3 rounded-lg text-base font-medium text-[#0B1F33] hover:bg-[#F4F1EA] hover:text-[#233E32] transition-colors flex items-center justify-between"
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="px-3 py-3 rounded-lg text-base font-medium text-[#0B1F33] hover:bg-[#F4F1EA] hover:text-[#233E32] transition-colors flex items-center justify-between cursor-pointer"
                   >
                     <span>{link.name}</span>
                     <ArrowRight className="w-4 h-4 text-[#4A5B6D]/40" />
