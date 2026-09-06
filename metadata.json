@@ -1,0 +1,7 @@
+{
+  "name": "Plan & Explore",
+  "description": "Plan the Journey. Explore the Unknown. Curated boutique travel packages, Himalayan escapes, and tailored itineraries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

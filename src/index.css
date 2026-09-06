@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Georgia", "Cormorant Garamond", Cambria, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, "Plus Jakarta Sans", sans-serif;
+  --color-bg-primary: #FAFAF7;
+  --color-bg-secondary: #F4F1EA;
+  --color-bg-stone: #E8E8E1;
+  --color-bg-muted: #EAE6DC;
+  --color-text-primary: #0B1F33;
+  --color-text-secondary: #4F5E6E;
+  --color-accent-olive: #5A5A40;
+  --color-accent-olive-dark: #4a4a35;
+  --color-accent-forest: #233E32;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: #FAFAF7;
+    color: #0B1F33;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Editorial typography styles */
+.font-editorial {
+  font-family: var(--font-serif);
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* Hide scrollbar for clean horizontal scrolls */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth mobile slide-in drawer animation */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Subtle image shimmer placeholder */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #E8E8E1 25%, #F4F1EA 50%, #E8E8E1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+}
+
