@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowDown, ArrowRight, ShieldCheck, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, MessageCircle, Mountain, MapPin, Users } from 'lucide-react';
 import { WHATSAPP_BASE_URL } from '../data/packages';
 
 interface HeroProps {
@@ -7,159 +7,228 @@ interface HeroProps {
   onHaveAPlanClick: () => void;
 }
 
+const heroImages = [
+  'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2071&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?q=80&w=2070&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop',
+];
+
 export const Hero: React.FC<HeroProps> = ({
   onExploreClick,
   onHaveAPlanClick,
 }) => {
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  // Cycle through background images
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <section
       id="hero"
-      className="relative min-h-[90vh] flex flex-col justify-between pt-28 sm:pt-32 lg:pt-36 pb-8 sm:pb-12 bg-[#FAFAF7] text-[#0B1F33] overflow-hidden"
+      className="relative min-h-screen flex flex-col justify-end overflow-hidden"
     >
-      {/* Main Editorial Grid Layout */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex-1 flex flex-col justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center relative">
-          {/* Left Editorial Column */}
-          <div className="lg:col-span-5 flex flex-col justify-center lg:pr-6 z-10">
-            {/* Metadata Eyebrow */}
-            <div className="mb-4 text-[10px] tracking-[0.3em] font-semibold text-[#5A5A40] uppercase flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#5A5A40]" />
-              <span>Curated Journeys &middot; India</span>
+      {/* Cycling Background Images */}
+      {heroImages.map((img, index) => (
+        <div
+          key={index}
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-[2000ms] ease-in-out"
+          style={{
+            backgroundImage: `url("${img}")`,
+            opacity: currentImage === index ? 1 : 0,
+            transform: currentImage === index ? 'scale(1.05)' : 'scale(1)',
+            transition: 'opacity 2s ease-in-out, transform 8s ease-out',
+          }}
+        />
+      ))}
+
+      {/* Cinematic Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33] via-[#0B1F33]/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0B1F33]/50 via-transparent to-transparent" />
+
+      {/* Animated Grain Texture */}
+      <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay" style={{
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+      }} />
+
+      {/* Floating Stats Badges - Desktop Only */}
+      <div className="hidden lg:block absolute top-32 right-12 z-10">
+        <div
+          className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg px-5 py-4 text-white shadow-2xl"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 1s ease-out 1.2s',
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#5A5A40]/30 flex items-center justify-center">
+              <Mountain className="w-5 h-5 text-[#A3B899]" />
             </div>
-
-            {/* Display Editorial Headline */}
-            <h1
-              id="hero-headline"
-              className="text-4xl sm:text-6xl lg:text-7xl xl:text-[76px] leading-[1.05] font-normal mb-6 sm:mb-8 font-editorial tracking-tight text-[#0B1F33]"
-            >
-              Plan the Journey,
-              <br />
-              <span className="text-[#5A5A40] italic font-normal">Explore the Unknown.</span>
-            </h1>
-
-            {/* Editorial Narrative */}
-            <p className="text-base sm:text-lg leading-relaxed text-[#4F5E6E] mb-8 sm:mb-10 max-w-md font-editorial italic">
-              Curated escapes, unforgettable routes, and journeys designed for people who want to
-              experience more than just a destination.
-            </p>
-
-            {/* Editorial Actions */}
-            <div className="flex flex-wrap items-center gap-6">
-              <button
-                id="hero-explore-packages-btn"
-                onClick={onExploreClick}
-                className="bg-[#5A5A40] text-white px-8 py-4 text-xs font-bold tracking-widest uppercase hover:bg-[#4a4a35] transition-all shadow-sm active:scale-95 cursor-pointer"
-              >
-                Explore Packages
-              </button>
-
-              <button
-                id="hero-have-a-plan-btn"
-                onClick={onHaveAPlanClick}
-                className="text-xs font-bold tracking-widest uppercase border-b-2 border-[#0B1F33] pb-1 hover:opacity-75 transition-all text-[#0B1F33] cursor-pointer"
-              >
-                Have a Plan?
-              </button>
-            </div>
-
-            {/* Editorial Trust Badges */}
-            <div className="mt-10 pt-6 border-t border-[#0B1F33]/10 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#4F5E6E]">
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#5A5A40]" />
-                <span>Verified Mountain Stays</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-[#5A5A40]" />
-                <span>Small Group Escapes</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-[#5A5A40]" />
-                <span>Direct WhatsApp Line</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Visual Column */}
-          <div className="lg:col-span-7 relative h-[380px] sm:h-[480px] lg:h-[580px] w-full">
-            <div className="w-full h-full bg-[#E8E8E1] overflow-hidden rounded-sm relative shadow-2xl border border-[#0B1F33]/5">
-              {/* Himalayan Landscape Imagery */}
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out hover:scale-105"
-                style={{
-                  backgroundImage: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url("https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2071&auto=format&fit=crop")`,
-                }}
-              >
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(to top, rgba(11,31,51,0.5) 0%, transparent 50%)',
-                  }}
-                />
-              </div>
-
-              {/* Editorial Photography Badge */}
-              <div className="absolute bottom-4 sm:bottom-6 left-3 sm:left-6 bg-[#0B1F33]/85 backdrop-blur-md px-4 sm:px-5 py-3 sm:py-3.5 border border-white/15 text-white shadow-xl max-w-xs sm:max-w-sm rounded-xs">
-                <div className="text-[9px] tracking-[0.25em] font-bold text-[#A3B899] uppercase mb-1">
-                  HIMALAYAN SANCTUARY
-                </div>
-                <div className="font-editorial text-lg sm:text-2xl font-normal text-white leading-tight">
-                  The Great Himalayan Trails
-                </div>
-                <p className="text-xs text-white/75 font-sans mt-1">
-                  Untouched cedar forests, rushing rivers &amp; high mountain passes.
-                </p>
-              </div>
-            </div>
-
-            {/* Floating Vertical Meta Element */}
-            <div className="hidden xl:flex absolute top-12 -right-8 flex-col items-center gap-4 py-8 border-r border-[#0B1F33]/10 h-64 justify-center pointer-events-none">
-              <div className="vertical-text transform rotate-180 text-[9px] tracking-[0.4em] font-bold uppercase opacity-35 whitespace-nowrap text-[#0B1F33]">
-                Plan the Journey &bull; Explore the Unknown
-              </div>
+            <div>
+              <div className="text-lg font-bold">1,600m – 3,120m</div>
+              <div className="text-[10px] uppercase tracking-wider text-white/60">Elevation Range</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Editorial Interface Bar */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mt-12 pt-6 border-t border-[#0B1F33]/10">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-10">
-            <a
-              id="hero-whatsapp-direct-btn"
-              href={WHATSAPP_BASE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full bg-[#25D366]/10 hover:bg-[#25D366]/20 transition-all border border-[#25D366]/30 text-xs font-semibold text-[#0B1F33]"
-              title="Chat directly on WhatsApp"
-            >
-              <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
-              <span>Chat on WhatsApp</span>
-            </a>
-            <div className="flex flex-col">
-              <span className="text-[8px] font-bold uppercase tracking-widest text-[#5A5A40] mb-0.5">
-                Headquarters
-              </span>
-              <span className="text-xs font-semibold text-[#0B1F33]">Delhi, India</span>
+      <div className="hidden lg:block absolute top-56 right-24 z-10">
+        <div
+          className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg px-5 py-4 text-white shadow-2xl"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 1s ease-out 1.6s',
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#5A5A40]/30 flex items-center justify-center">
+              <Users className="w-5 h-5 text-[#A3B899]" />
+            </div>
+            <div>
+              <div className="text-lg font-bold">8–12 Max</div>
+              <div className="text-[10px] uppercase tracking-wider text-white/60">Intimate Groups</div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Scroll to Explore indicator */}
-          <button
-            onClick={onExploreClick}
-            className="flex items-center gap-4 group cursor-pointer text-[#0B1F33] hover:text-[#5A5A40] transition-colors"
-            aria-label="Scroll to Explore"
-          >
-            <div className="w-12 h-[1px] bg-[#0B1F33]/20 group-hover:bg-[#5A5A40] transition-colors" />
-            <div className="text-[10px] font-bold uppercase tracking-[0.2em]">Scroll to Explore</div>
-            <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
-          </button>
-
-          <div className="text-[9px] uppercase tracking-widest font-medium opacity-40 text-[#0B1F33] text-center sm:text-right">
-            &copy; 2026 Plan & Explore. Travel should feel like discovery.
+      {/* Main Hero Content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pb-12 sm:pb-16 lg:pb-20 pt-32">
+        {/* Eyebrow */}
+        <div
+          className="mb-6 sm:mb-8"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease-out 0.3s',
+          }}
+        >
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-white/90">
+            <span className="w-2 h-2 rounded-full bg-[#A3B899] animate-pulse" />
+            <span className="text-[11px] tracking-[0.2em] font-semibold uppercase">
+              Curated Himalayan Journeys
+            </span>
           </div>
         </div>
+
+        {/* Main Headline */}
+        <h1
+          className="font-editorial text-white leading-[0.95] mb-6 sm:mb-8"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+            transition: 'all 1s ease-out 0.5s',
+          }}
+        >
+          <span className="block text-5xl sm:text-7xl lg:text-8xl xl:text-[110px] font-normal tracking-tight">
+            Plan the Journey,
+          </span>
+          <span className="block text-5xl sm:text-7xl lg:text-8xl xl:text-[110px] font-normal italic text-[#A3B899] mt-1">
+            Explore the Unknown.
+          </span>
+        </h1>
+
+        {/* Sub-copy */}
+        <p
+          className="text-base sm:text-xl text-white/70 max-w-xl mb-10 sm:mb-12 leading-relaxed font-light"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease-out 0.8s',
+          }}
+        >
+          Handcrafted escapes through misty valleys, ancient cedar forests, and
+          snow-kissed mountain passes — designed for small groups and private getaways.
+        </p>
+
+        {/* CTA Buttons */}
+        <div
+          className="flex flex-wrap items-center gap-4 sm:gap-5 mb-12 sm:mb-16"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease-out 1s',
+          }}
+        >
+          <button
+            id="hero-explore-packages-btn"
+            onClick={onExploreClick}
+            className="group bg-white text-[#0B1F33] px-8 sm:px-10 py-4 sm:py-5 text-xs sm:text-sm font-bold tracking-widest uppercase hover:bg-[#A3B899] hover:text-[#0B1F33] transition-all duration-300 shadow-xl active:scale-95 cursor-pointer flex items-center gap-3"
+          >
+            <span>Explore Packages</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+
+          <button
+            id="hero-have-a-plan-btn"
+            onClick={onHaveAPlanClick}
+            className="text-white px-8 sm:px-10 py-4 sm:py-5 text-xs sm:text-sm font-bold tracking-widest uppercase border-2 border-white/30 hover:bg-white/10 hover:border-white/60 backdrop-blur-sm transition-all duration-300 active:scale-95 cursor-pointer"
+          >
+            Have a Plan?
+          </button>
+
+          <a
+            id="hero-whatsapp-direct-btn"
+            href={WHATSAPP_BASE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-6 py-4 sm:py-5 rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/35 border border-[#25D366]/40 text-white text-xs sm:text-sm font-semibold transition-all backdrop-blur-sm"
+          >
+            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+            <span>WhatsApp</span>
+          </a>
+        </div>
+
+        {/* Bottom Divider Strip with Location Markers */}
+        <div
+          className="flex flex-wrap items-center gap-6 sm:gap-10 pt-6 border-t border-white/15"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transition: 'all 0.8s ease-out 1.4s',
+          }}
+        >
+          {[
+            { label: 'Jibhi & Tirthan', tag: 'From ₹4,999' },
+            { label: 'Kashmir Valley', tag: 'Coming Soon' },
+            { label: 'Old Manali', tag: 'Coming Soon' },
+          ].map((dest, i) => (
+            <div key={i} className="flex items-center gap-2 text-white/60">
+              <MapPin className="w-3.5 h-3.5 text-[#A3B899]" />
+              <span className="text-xs font-medium">{dest.label}</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/50 font-semibold">
+                {dest.tag}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Image Progress Indicators */}
+      <div className="absolute bottom-6 right-6 sm:right-12 z-10 flex items-center gap-2">
+        {heroImages.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentImage(i)}
+            className={`transition-all duration-500 cursor-pointer rounded-full ${
+              currentImage === i
+                ? 'w-8 h-2 bg-white'
+                : 'w-2 h-2 bg-white/40 hover:bg-white/60'
+            }`}
+            aria-label={`View image ${i + 1}`}
+          />
+        ))}
       </div>
     </section>
   );

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PACKAGES, WHATSAPP_RAW_NUMBER } from '../data/packages';
 import { TravelPackage } from '../types';
 import { Link, useRouter } from '../router';
-import { RouteVisualizer } from '../components/RouteVisualizer';
 import { PackageItinerary } from '../components/PackageItinerary';
 import {
   ArrowLeft,
@@ -18,6 +17,9 @@ import {
   ShieldCheck,
   Calendar,
   Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  Navigation,
 } from 'lucide-react';
 
 interface PackageDetailPageProps {
@@ -33,6 +35,14 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
 }) => {
   const { navigate } = useRouter();
   const [copied, setCopied] = useState(false);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const [isHeroLoaded, setIsHeroLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsHeroLoaded(true);
+    // Scroll to top on mount
+    window.scrollTo(0, 0);
+  }, [packageId]);
 
   // Find package by ID
   const pkg = PACKAGES.find(
@@ -63,6 +73,18 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
       </div>
     );
   }
+
+  // All images for gallery
+  const allImages = [pkg.coverImage, ...(pkg.galleryImages || [])];
+
+  // Auto-cycle gallery
+  useEffect(() => {
+    if (allImages.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveGalleryIndex((prev) => (prev + 1) % allImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [allImages.length]);
 
   const handleShare = async () => {
     const shareUrl = window.location.href;
@@ -104,206 +126,235 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
   const otherPackages = PACKAGES.filter((p) => p.id !== pkg.id);
 
   return (
-    <div className="bg-[#FAFAF7] text-[#0B1F33] pt-24 sm:pt-28 pb-24">
-      {/* Sticky Top Action Strip */}
-      <div className="sticky top-16 z-20 bg-[#FAFAF7]/95 backdrop-blur-md border-b border-[#0B1F33]/10 py-2.5 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+    <div className="bg-[#FAFAF7] text-[#0B1F33]">
+      {/* ─── FULL-BLEED CINEMATIC HERO ─── */}
+      <section className="relative min-h-[70vh] sm:min-h-[80vh] flex flex-col justify-end overflow-hidden">
+        {/* Cycling Gallery Background */}
+        {allImages.map((img, index) => (
+          <div
+            key={index}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url("${img}")`,
+              opacity: activeGalleryIndex === index ? 1 : 0,
+              transform: activeGalleryIndex === index ? 'scale(1.03)' : 'scale(1)',
+              transition: 'opacity 1.5s ease-in-out, transform 6s ease-out',
+            }}
+          />
+        ))}
+
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33] via-[#0B1F33]/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1F33]/40 via-transparent to-transparent" />
+
+        {/* Back button (top-left) */}
+        <div className="absolute top-24 sm:top-28 left-4 sm:left-8 z-20">
           <Link
             to="/packages"
-            className="group inline-flex items-center gap-1.5 min-h-[40px] text-xs uppercase tracking-wider font-semibold text-[#0B1F33] hover:text-[#5A5A40] transition-colors"
+            className="group inline-flex items-center gap-2 px-4 py-2.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-white text-xs font-semibold hover:bg-white/20 transition-all"
           >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             <span>All Packages</span>
           </Link>
+        </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+        {/* Share button (top-right) */}
+        <div className="absolute top-24 sm:top-28 right-4 sm:right-8 z-20 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleShare}
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-white text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            <span>{copied ? 'Copied!' : 'Share'}</span>
+          </button>
+        </div>
+
+        {/* Hero Content */}
+        <div
+          className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 sm:pb-14"
+          style={{
+            opacity: isHeroLoaded ? 1 : 0,
+            transform: isHeroLoaded ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease-out 0.3s',
+          }}
+        >
+          {/* Badges */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white text-[10px] font-bold tracking-widest uppercase border border-white/20">
+              {pkg.packageNumber}
+            </span>
+            {pkg.frequency && (
+              <span className="px-3 py-1.5 rounded-full bg-[#5A5A40]/60 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase border border-[#5A5A40]/30">
+                <Calendar className="w-3 h-3 inline mr-1" />
+                {pkg.frequency}
+              </span>
+            )}
+            {pkg.bestSeason && (
+              <span className="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-white/80 text-[10px] font-medium border border-white/10">
+                {pkg.bestSeason}
+              </span>
+            )}
+          </div>
+
+          {/* Title */}
+          <h1 className="font-editorial text-4xl sm:text-6xl lg:text-7xl font-normal tracking-tight text-white leading-[1.05] mb-3">
+            {pkg.destination}
+          </h1>
+          <p className="text-base sm:text-xl text-white/70 max-w-2xl font-light leading-relaxed mb-8">
+            {pkg.subtitle}
+          </p>
+
+          {/* Quick Stats Bar */}
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-8">
+            {[
+              { icon: <Clock className="w-4 h-4" />, label: pkg.duration },
+              ...(pkg.elevation ? [{ icon: <Mountain className="w-4 h-4" />, label: pkg.elevation }] : []),
+              { icon: <MapPin className="w-4 h-4" />, label: pkg.departureFrom },
+              { icon: <Users className="w-4 h-4" />, label: pkg.groupSize || 'Small Groups' },
+            ].map((stat, i) => (
+              <div key={i} className="flex items-center gap-2 text-white/80">
+                <span className="text-[#A3B899]">{stat.icon}</span>
+                <span className="text-xs sm:text-sm font-medium">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={handleShare}
-              className="px-3 py-1.5 min-h-[40px] text-[#4F5E6E] hover:text-[#0B1F33] rounded-sm hover:bg-[#E8E8E1] transition-colors text-xs flex items-center gap-1 cursor-pointer"
-              title="Share journey"
+              onClick={() => onBookPackage(pkg)}
+              className="group bg-white text-[#0B1F33] px-8 py-4 text-xs sm:text-sm font-bold tracking-widest uppercase hover:bg-[#A3B899] transition-all duration-300 shadow-xl active:scale-95 cursor-pointer flex items-center gap-2.5"
             >
-              <Share2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{copied ? 'Copied Link' : 'Share'}</span>
+              <span>Reserve Spot · {pkg.price}</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
 
             <a
               href={getWhatsAppMessageUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] border border-[#0B1F33]/20 hover:border-[#0B1F33] text-[#0B1F33] text-xs font-semibold uppercase tracking-wider rounded-xs transition-colors"
+              className="flex items-center gap-2 px-6 py-4 border-2 border-white/30 text-white text-xs sm:text-sm font-bold tracking-widest uppercase hover:bg-white/10 hover:border-white/60 transition-all backdrop-blur-sm"
             >
-              <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
+              <MessageCircle className="w-4 h-4 text-[#25D366]" />
               <span>WhatsApp</span>
             </a>
-
-            <button
-              type="button"
-              onClick={() => onBookPackage(pkg)}
-              className="px-5 py-2 min-h-[40px] bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs font-bold uppercase tracking-widest rounded-xs transition-all shadow-xs active:scale-95 cursor-pointer flex items-center justify-center"
-            >
-              Reserve Spot ({pkg.price})
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="mb-4">
-          <ol className="flex items-center gap-2 text-xs text-[#4F5E6E]">
-            <li>
-              <Link to="/" className="hover:text-[#0B1F33] transition-colors">
-                Home
-              </Link>
-            </li>
-            <li>&middot;</li>
-            <li>
-              <Link to="/packages" className="hover:text-[#0B1F33] transition-colors">
-                Packages
-              </Link>
-            </li>
-            <li>&middot;</li>
-            <li className="font-semibold text-[#0B1F33] truncate max-w-[200px] sm:max-w-none">
-              {pkg.destination}
-            </li>
-          </ol>
-        </nav>
-
-        {/* Hero Banner Card */}
-        <div className="relative rounded-sm overflow-hidden bg-[#0B1F33] text-white mb-8 border border-[#0B1F33]/15 shadow-xl">
-          <div className="relative aspect-[16/9] sm:aspect-[21/9] max-h-[420px] w-full">
-            <img
-              src={pkg.coverImage}
-              alt={pkg.destination}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33] via-[#0B1F33]/45 to-transparent" />
-
-            <div className="absolute bottom-6 left-6 right-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-xs bg-white text-[#0B1F33] text-[10px] font-bold tracking-widest uppercase">
-                    {pkg.packageNumber}
-                  </span>
-                  {pkg.frequency && (
-                    <span className="px-2.5 py-0.5 rounded-xs bg-black/40 backdrop-blur-xs text-white text-[10px] font-medium border border-white/20">
-                      {pkg.frequency}
-                    </span>
-                  )}
-                </div>
-
-                <h1 className="font-editorial text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-white">
-                  {pkg.destination}
-                </h1>
-                <p className="mt-2 text-sm sm:text-base text-white/80 max-w-2xl font-editorial italic">
-                  {pkg.subtitle}
-                </p>
-              </div>
-
-              <div className="shrink-0 text-left md:text-right border-t md:border-t-0 pt-3 md:pt-0 border-white/10">
-                <span className="text-[10px] uppercase tracking-wider text-white/60 block font-semibold">
-                  Starting Per Person
-                </span>
-                <div className="font-editorial text-3xl sm:text-4xl text-white font-normal">
-                  {pkg.price}
-                </div>
-                {pkg.priceNote && (
-                  <span className="text-[10px] text-white/60 mt-0.5 block">{pkg.priceNote}</span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Specifications Strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-[#0B1F33] border-t border-white/10 text-xs">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#A3B899] shrink-0" />
-              <div>
-                <span className="text-white/50 text-[10px] uppercase block">Duration</span>
-                <span className="text-white font-medium">{pkg.duration}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#A3B899] shrink-0" />
-              <div>
-                <span className="text-white/50 text-[10px] uppercase block">Departure</span>
-                <span className="text-white font-medium truncate">{pkg.departureFrom}</span>
-              </div>
-            </div>
-
-            {pkg.elevation && (
-              <div className="flex items-center gap-2">
-                <Mountain className="w-4 h-4 text-[#A3B899] shrink-0" />
-                <div>
-                  <span className="text-white/50 text-[10px] uppercase block">Elevation</span>
-                  <span className="text-white font-medium">{pkg.elevation}</span>
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-[#A3B899] shrink-0" />
-              <div>
-                <span className="text-white/50 text-[10px] uppercase block">Group Size</span>
-                <span className="text-white font-medium">{pkg.groupSize || 'Curated Small Groups'}</span>
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Two-Column Detail Layout */}
+        {/* Gallery Dots */}
+        {allImages.length > 1 && (
+          <div className="absolute bottom-4 right-4 sm:right-8 z-10 flex items-center gap-1.5">
+            {allImages.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveGalleryIndex(i)}
+                className={`transition-all duration-500 cursor-pointer rounded-full ${
+                  activeGalleryIndex === i
+                    ? 'w-6 h-1.5 bg-white'
+                    : 'w-1.5 h-1.5 bg-white/40 hover:bg-white/60'
+                }`}
+                aria-label={`View image ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ─── MAIN CONTENT ─── */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-          {/* Main Content Column */}
-          <div className="lg:col-span-8 space-y-12">
-            {/* Overview */}
-            <section className="bg-white rounded-sm p-6 sm:p-8 border border-[#0B1F33]/10 shadow-xs">
-              <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#5A5A40] block mb-2">
-                THE EXPEDITION
-              </span>
-              <h2 className="font-editorial text-2xl sm:text-3xl font-normal text-[#0B1F33] mb-4">
-                Journey Overview
-              </h2>
-              <p className="text-sm sm:text-base text-[#4F5E6E] leading-relaxed whitespace-pre-line font-editorial">
+
+          {/* ─── LEFT: Main Content ─── */}
+          <div className="lg:col-span-8 space-y-10">
+
+            {/* Overview — concise card with visual accent */}
+            <section className="relative">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-1 h-8 bg-[#5A5A40] rounded-full" />
+                <div>
+                  <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#5A5A40] block">
+                    The Expedition
+                  </span>
+                  <h2 className="font-editorial text-2xl sm:text-3xl font-normal text-[#0B1F33]">
+                    Journey Overview
+                  </h2>
+                </div>
+              </div>
+              <p className="text-sm sm:text-base text-[#4F5E6E] leading-relaxed">
                 {pkg.overview}
               </p>
 
-              {/* Route Waypoints Visualizer */}
+              {/* Route Waypoints — visual chain */}
               {pkg.routeWaypoints && pkg.routeWaypoints.length > 0 && (
-                <div className="mt-8 pt-6 border-t border-[#0B1F33]/8">
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#0B1F33] block mb-3">
-                    Journey Circuit &amp; Key Waypoints:
-                  </span>
-                  <RouteVisualizer waypoints={pkg.routeWaypoints} />
+                <div className="mt-8 p-5 rounded-xl bg-[#0B1F33] text-white">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-[#A3B899] flex items-center gap-1.5">
+                      <Navigation className="w-3.5 h-3.5" />
+                      Journey Circuit
+                    </span>
+                    <span className="text-[11px] text-white/50">{pkg.routeWaypoints.length} stops</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {pkg.routeWaypoints.map((point, index) => {
+                      const isTerminal = index === 0 || index === pkg.routeWaypoints.length - 1;
+                      return (
+                        <React.Fragment key={index}>
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
+                              isTerminal
+                                ? 'bg-[#5A5A40] text-white border border-[#5A5A40]'
+                                : 'bg-white/10 text-white/90 border border-white/15'
+                            }`}
+                          >
+                            {isTerminal && <MapPin className="w-3 h-3 text-[#A3B899]" />}
+                            {point}
+                          </span>
+                          {index < pkg.routeWaypoints.length - 1 && (
+                            <span className="text-white/25 text-sm">→</span>
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </section>
 
-            {/* Complete Day-by-Day Itinerary */}
+            {/* Itinerary */}
             <PackageItinerary pkg={pkg} />
 
-            {/* Photo Gallery for this Package */}
+            {/* Photo Gallery */}
             {pkg.galleryImages && pkg.galleryImages.length > 0 && (
-              <section className="bg-white rounded-sm p-6 sm:p-8 border border-[#0B1F33]/10 shadow-xs">
-                <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#5A5A40] block mb-2">
-                  PHOTOGRAPHY
-                </span>
-                <h2 className="font-editorial text-2xl sm:text-3xl font-normal text-[#0B1F33] mb-6">
-                  Moments from {pkg.destination}
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <section>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-1 h-8 bg-[#5A5A40] rounded-full" />
+                  <div>
+                    <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#5A5A40] block">
+                      Photography
+                    </span>
+                    <h2 className="font-editorial text-2xl sm:text-3xl font-normal text-[#0B1F33]">
+                      Moments from {pkg.destination}
+                    </h2>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
                   {pkg.galleryImages.map((img, i) => (
                     <div
                       key={i}
-                      className="aspect-[4/3] rounded-xs overflow-hidden bg-[#E8E8E1] border border-[#0B1F33]/10 shadow-2xs"
+                      className={`group relative overflow-hidden rounded-xl bg-[#E8E8E1] cursor-pointer ${
+                        i === 0 ? 'col-span-2 aspect-[21/9]' : 'aspect-[4/3]'
+                      }`}
+                      onClick={() => setActiveGalleryIndex(i + 1)}
                     >
                       <img
                         src={img}
                         alt={`${pkg.destination} gallery photo ${i + 1}`}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         loading="lazy"
                       />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                     </div>
                   ))}
                 </div>
@@ -311,70 +362,75 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
             )}
           </div>
 
-          {/* Sidebar Column */}
-          <div className="lg:col-span-4 space-y-6">
-            {/* Booking Action Card */}
-            <div className="sticky top-28 bg-white rounded-sm p-6 border border-[#0B1F33]/12 shadow-md space-y-5">
-              <div>
-                <span className="text-[10px] uppercase tracking-widest text-[#5A5A40] font-bold block mb-1">
-                  RESERVE YOUR JOURNEY
-                </span>
-                <div className="flex items-baseline gap-1">
-                  <span className="font-editorial text-3xl font-normal text-[#0B1F33]">
-                    {pkg.price}
+          {/* ─── RIGHT: Sticky Sidebar ─── */}
+          <div className="lg:col-span-4">
+            <div className="sticky top-24 space-y-5">
+
+              {/* Booking Card — glassmorphism style */}
+              <div className="bg-white rounded-xl p-6 border border-[#0B1F33]/10 shadow-lg">
+                <div className="mb-5">
+                  <span className="text-[10px] uppercase tracking-widest text-[#5A5A40] font-bold block mb-1">
+                    Reserve Your Journey
                   </span>
-                  <span className="text-xs text-[#4F5E6E]">/ person</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-editorial text-4xl font-normal text-[#0B1F33]">
+                      {pkg.price}
+                    </span>
+                    <span className="text-xs text-[#4F5E6E]">/ person</span>
+                  </div>
+                  {pkg.priceNote && (
+                    <p className="text-[11px] text-[#4F5E6E] mt-1">{pkg.priceNote}</p>
+                  )}
                 </div>
-                <p className="text-xs text-[#4F5E6E] mt-1">
-                  {pkg.priceNote || 'Starting price per person'}
-                </p>
+
+                <div className="space-y-2.5">
+                  <button
+                    type="button"
+                    onClick={() => onBookPackage(pkg)}
+                    className="w-full py-4 px-4 bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs font-bold uppercase tracking-widest rounded-lg transition-all shadow-md hover:shadow-lg active:scale-[0.98] min-h-[48px] cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>Reserve Spot Now</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  <a
+                    href={getWhatsAppMessageUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-4 border-2 border-[#0B1F33]/15 hover:border-[#0B1F33]/40 text-[#0B1F33] text-xs font-semibold uppercase tracking-wider rounded-lg transition-all hover:bg-[#F4F1EA] min-h-[48px]"
+                  >
+                    <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                    <span>Chat on WhatsApp</span>
+                  </a>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-[#0B1F33]/8 space-y-2.5">
+                  <div className="flex items-center gap-2 text-[11px] text-[#4F5E6E]">
+                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>No advance payment to inquire</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[11px] text-[#4F5E6E]">
+                    <Sparkles className="w-4 h-4 text-[#5A5A40] shrink-0" />
+                    <span>Curated by local Himalayan hosts</span>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-2.5 pt-2">
-                <button
-                  type="button"
-                  onClick={() => onBookPackage(pkg)}
-                  className="w-full py-3.5 px-4 bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs font-bold uppercase tracking-widest rounded-xs transition-all shadow-xs active:scale-98 min-h-[44px] cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <span>Reserve Spot Now</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                <a
-                  href={getWhatsAppMessageUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-[#0B1F33]/20 hover:border-[#0B1F33] text-[#0B1F33] text-xs font-semibold uppercase tracking-wider rounded-xs transition-colors hover:bg-[#F4F1EA] min-h-[44px]"
-                >
-                  <MessageCircle className="w-4 h-4 text-[#25D366]" />
-                  <span>Chat on WhatsApp</span>
-                </a>
-              </div>
-
-              <div className="pt-3 border-t border-[#0B1F33]/10 space-y-2 text-[11px] text-[#4F5E6E]">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>No advance payment required to inquire</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#5A5A40] shrink-0" />
-                  <span>Curated by local Himalayan hosts</span>
-                </div>
-              </div>
-
-              {/* Inclusions Breakdown */}
-              <div className="pt-4 border-t border-[#0B1F33]/10">
-                <span className="text-[10px] uppercase tracking-wider font-bold text-[#0B1F33] block mb-3">
-                  Package Inclusions:
+              {/* Inclusions Card */}
+              <div className="bg-white rounded-xl p-6 border border-[#0B1F33]/10 shadow-sm">
+                <span className="text-[10px] uppercase tracking-wider font-bold text-[#5A5A40] block mb-4">
+                  What's Included
                 </span>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {pkg.inclusions.map((inc, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-xs text-[#0B1F33]">
-                      <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <li key={idx} className="flex items-start gap-2.5">
+                      <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 mt-0.5">
+                        <Check className="w-3 h-3 text-emerald-600" />
+                      </div>
                       <div>
-                        <strong className="font-semibold">{inc.title}</strong>
+                        <span className="text-xs font-semibold text-[#0B1F33] block">{inc.title}</span>
                         {inc.description && (
-                          <p className="text-[11px] text-[#4F5E6E] mt-0.5">{inc.description}</p>
+                          <span className="text-[11px] text-[#4F5E6E] leading-relaxed block mt-0.5">{inc.description}</span>
                         )}
                       </div>
                     </li>
@@ -382,15 +438,15 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
                 </ul>
               </div>
 
-              {/* Exclusions */}
+              {/* Exclusions Card */}
               {pkg.exclusions && pkg.exclusions.length > 0 && (
-                <div className="pt-4 border-t border-[#0B1F33]/10">
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#0B1F33] block mb-2">
-                    Exclusions:
+                <div className="bg-[#F4F1EA] rounded-xl p-5 border border-[#0B1F33]/8">
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#0B1F33] block mb-3">
+                    Not Included
                   </span>
-                  <ul className="space-y-1.5">
+                  <ul className="space-y-2">
                     {pkg.exclusions.map((exc, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-[11px] text-[#4F5E6E]">
+                      <li key={idx} className="flex items-center gap-2 text-xs text-[#4F5E6E]">
                         <X className="w-3 h-3 text-red-400 shrink-0" />
                         <span>{exc}</span>
                       </li>
@@ -402,56 +458,59 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
           </div>
         </div>
 
-        {/* Other Curated Escapes Recommendation */}
+        {/* ─── OTHER PACKAGES ─── */}
         {otherPackages.length > 0 && (
           <div className="mt-20 pt-12 border-t border-[#0B1F33]/10">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <span className="text-[10px] uppercase tracking-widest text-[#5A5A40] font-bold block mb-1">
-                  CONTINUE EXPLORING
+                  Continue Exploring
                 </span>
                 <h3 className="font-editorial text-2xl sm:text-3xl text-[#0B1F33] font-normal">
-                  Other Himalayan Escapes
+                  Other Curated Escapes
                 </h3>
               </div>
               <Link
                 to="/packages"
-                className="text-xs uppercase tracking-widest font-bold text-[#5A5A40] hover:text-[#4a4a35] transition-colors inline-flex items-center gap-1"
+                className="text-xs uppercase tracking-widest font-bold text-[#5A5A40] hover:text-[#0B1F33] transition-colors inline-flex items-center gap-1"
               >
-                <span>All Packages</span>
+                <span>All</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {otherPackages.slice(0, 3).map((other) => (
                 <Link
                   key={other.id}
                   to={`/packages/${other.id}`}
-                  className="group bg-white rounded-sm border border-[#0B1F33]/10 overflow-hidden shadow-2xs hover:shadow-md transition-all block"
+                  className="group relative block rounded-xl overflow-hidden cursor-pointer"
                 >
-                  <div className="aspect-[16/10] overflow-hidden bg-[#E8E8E1] relative">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[#E8E8E1]">
                     <img
                       src={other.coverImage}
                       alt={other.destination}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                    <span className="absolute bottom-2 left-3 text-xs text-white font-medium">
-                      {other.duration}
-                    </span>
-                  </div>
-                  <div className="p-4">
-                    <span className="text-[9px] uppercase tracking-widest font-bold text-[#5A5A40]">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33]/80 via-[#0B1F33]/20 to-transparent" />
+
+                    <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-white text-[10px] font-bold tracking-widest uppercase border border-white/20">
                       {other.packageNumber}
                     </span>
-                    <h4 className="font-editorial text-lg text-[#0B1F33] mt-0.5 group-hover:text-[#5A5A40] transition-colors">
-                      {other.destination}
-                    </h4>
-                    <span className="text-xs font-semibold text-[#0B1F33] block mt-2">
-                      Starting at {other.price}
-                    </span>
+
+                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                      <h4 className="font-editorial text-xl sm:text-2xl font-normal mb-1 group-hover:text-[#A3B899] transition-colors">
+                        {other.destination}
+                      </h4>
+                      <div className="flex items-center gap-3 text-xs text-white/70 mb-2">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 text-[#A3B899]" />
+                          {other.duration}
+                        </span>
+                      </div>
+                      <span className="font-editorial text-lg text-white">{other.price}</span>
+                    </div>
                   </div>
                 </Link>
               ))}
