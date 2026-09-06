@@ -33,7 +33,13 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
   const filteredPackages = PACKAGES.filter((pkg) => {
     if (activeCategory === 'All') return true;
     if (activeCategory === 'Himachal Pradesh') {
-      return pkg.destination.toLowerCase().includes('jibhi') || pkg.destination.toLowerCase().includes('manali') || pkg.destination.toLowerCase().includes('spiti');
+      return (
+        pkg.destination.toLowerCase().includes('jibhi') ||
+        pkg.destination.toLowerCase().includes('manali') ||
+        pkg.destination.toLowerCase().includes('spiti') ||
+        pkg.destination.toLowerCase().includes('mcleodganj') ||
+        pkg.destination.toLowerCase().includes('triund')
+      );
     }
     if (activeCategory === 'Kashmir Valley') {
       return pkg.destination.toLowerCase().includes('kashmir');
