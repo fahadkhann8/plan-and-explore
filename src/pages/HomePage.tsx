@@ -27,8 +27,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       <Hero
         onExploreClick={() => navigate('/packages')}
         onHaveAPlanClick={onOpenCustomPlan}
-        onSelectFeaturedPackage={() => navigate(`/packages/${PACKAGES[0].id}`)}
-        onBookFeaturedPackage={() => onBookPackage(PACKAGES[0])}
       />
 
       {/* 2. Curated Packages Preview Strip */}

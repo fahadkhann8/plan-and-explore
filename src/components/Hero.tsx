@@ -1,27 +1,16 @@
 import React from 'react';
 import { ArrowDown, ArrowRight, ShieldCheck, MessageCircle } from 'lucide-react';
-import { WHATSAPP_BASE_URL, PACKAGES } from '../data/packages';
+import { WHATSAPP_BASE_URL } from '../data/packages';
 
 interface HeroProps {
   onExploreClick: () => void;
   onHaveAPlanClick: () => void;
-  onSelectFeaturedPackage?: () => void;
-  onBookFeaturedPackage?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   onExploreClick,
   onHaveAPlanClick,
-  onSelectFeaturedPackage,
-  onBookFeaturedPackage,
 }) => {
-  const handleViewJourney = () => {
-    if (onSelectFeaturedPackage) {
-      onSelectFeaturedPackage();
-    } else {
-      onExploreClick();
-    }
-  };
 
   return (
     <section
@@ -109,38 +98,17 @@ export const Hero: React.FC<HeroProps> = ({
                 />
               </div>
 
-              {/* Featured Package Overlay Card */}
-              <div className="absolute bottom-4 sm:bottom-8 left-3 sm:left-8 right-3 sm:right-8 bg-white/95 backdrop-blur-md p-4 sm:p-7 flex flex-col sm:flex-row justify-between sm:items-end gap-3 sm:gap-4 border border-[#0B1F33]/10 shadow-lg">
-                <div>
-                  <div className="text-[10px] tracking-[0.2em] font-bold text-[#5A5A40] uppercase mb-1">
-                    Featured Package 01
-                  </div>
-                  <h2 className="text-xl sm:text-3xl font-normal mb-0.5 sm:mb-1 font-editorial text-[#0B1F33]">
-                    Jibhi &amp; Tirthan Valley
-                  </h2>
-                  <p className="text-xs text-[#4F5E6E] font-medium tracking-wide">
-                    2 Nights / 3 Days &middot; Starts Every Friday
-                  </p>
+              {/* Editorial Photography Badge */}
+              <div className="absolute bottom-4 sm:bottom-6 left-3 sm:left-6 bg-[#0B1F33]/85 backdrop-blur-md px-4 sm:px-5 py-3 sm:py-3.5 border border-white/15 text-white shadow-xl max-w-xs sm:max-w-sm rounded-xs">
+                <div className="text-[9px] tracking-[0.25em] font-bold text-[#A3B899] uppercase mb-1">
+                  HIMALAYAN SANCTUARY
                 </div>
-
-                <div className="text-left sm:text-right border-t sm:border-t-0 pt-2 sm:pt-0 border-[#0B1F33]/8">
-                  <div className="text-[10px] uppercase tracking-wider text-[#4F5E6E] mb-0.5 font-medium">
-                    Starting From
-                  </div>
-                  <div className="text-xl sm:text-3xl font-normal font-editorial text-[#0B1F33]">
-                    {PACKAGES[0]?.price || '₹4,999'}
-                  </div>
-                  <div className="mt-2 sm:mt-3 flex items-center justify-start sm:justify-end">
-                    <button
-                      id="hero-explore-journey-btn"
-                      onClick={handleViewJourney}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-4 py-2.5 min-h-[44px] bg-[#5A5A40] hover:bg-[#4a4a35] text-white transition-all shadow-xs cursor-pointer active:scale-95 group"
-                    >
-                      <span>View Package</span>
-                      <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                    </button>
-                  </div>
+                <div className="font-editorial text-lg sm:text-2xl font-normal text-white leading-tight">
+                  The Great Himalayan Trails
                 </div>
+                <p className="text-xs text-white/75 font-sans mt-1">
+                  Untouched cedar forests, rushing rivers &amp; high mountain passes.
+                </p>
               </div>
             </div>
 
