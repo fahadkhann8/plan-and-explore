@@ -60,14 +60,14 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
     <div className="bg-[#FAFAF7] text-[#0B1F33]">
       {/* ─── VISUAL HEADER ─── */}
       <section
-        className="relative pt-28 sm:pt-32 pb-14 sm:pb-20 overflow-hidden"
+        className="relative pt-28 sm:pt-32 pb-16 sm:pb-20 overflow-hidden"
         style={{
           backgroundImage: 'url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=80")',
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1F33]/80 via-[#0B1F33]/60 to-[#FAFAF7]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1F33]/85 via-[#0B1F33]/70 to-[#0B1F33]/90" />
 
         <div
           className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12"
@@ -97,14 +97,14 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
             <br />
             <span className="italic text-[#A3B899]">Packages</span>
           </h1>
-          <p className="mt-3 text-base sm:text-lg text-white/60 max-w-xl font-light">
+          <p className="mt-3 text-base sm:text-lg text-white/70 max-w-xl font-light">
             Slow travel journeys across pristine Himalayan corridors. Verified stays, scenic drives, and curated trails.
           </p>
         </div>
       </section>
 
       {/* ─── FILTERS + GRID ─── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 -mt-4 pb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-8 sm:pt-10 pb-24">
         {/* Category Filter Pills */}
         <div className="flex flex-wrap items-center gap-2 mb-10" role="tablist">
           {categories.map((cat) => (
