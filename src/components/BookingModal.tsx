@@ -306,7 +306,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ pkg, isOpen, onClose
                     maxLength={100}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g., Ananya Sharma"
+                    placeholder="e.g., Fahad Khan"
                     aria-invalid={submitAttempted && !!errors.fullName}
                     className={`w-full px-3.5 py-3 bg-white border rounded-xs text-sm text-[#0B1F33] placeholder-[#0B1F33]/30 focus:outline-hidden focus:border-[#5A5A40] transition-colors min-h-[44px] ${
                       submitAttempted && errors.fullName ? 'border-red-400 bg-red-50/30' : 'border-[#0B1F33]/20'
