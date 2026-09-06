@@ -15,6 +15,7 @@ import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { CustomPlanModal } from './components/CustomPlanModal';
 import { BookingModal } from './components/BookingModal';
+import { UnderConstructionModal } from './components/UnderConstructionModal';
 
 export default function App() {
   const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
@@ -119,6 +120,9 @@ export default function App() {
         isOpen={!!bookingPackage}
         onClose={() => setBookingPackage(null)}
       />
+
+      {/* Building Phase / Early Preview Notice Popup */}
+      <UnderConstructionModal />
     </div>
   );
 }

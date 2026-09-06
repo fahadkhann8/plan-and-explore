@@ -72,3 +72,20 @@
   animation: shimmer 1.8s infinite;
 }
 
+/* Hide Netlify injected badges, feedback widgets, and drawers across all devices */
+[data-netlify-deploy-preview],
+iframe[src*="netlify"],
+.netlify-badge,
+#netlify-identity-widget,
+div[class*="netlify-feedback"],
+div[id*="netlify-feedback"],
+div[class*="netlify-drawer"],
+div[id*="netlify-drawer"],
+netlify-drawer {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+
