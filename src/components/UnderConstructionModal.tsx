@@ -73,19 +73,21 @@ export const UnderConstructionModal: React.FC = () => {
 
         {/* Title */}
         <h3 id="construction-title" className="font-editorial text-2xl sm:text-3xl font-normal text-[#0B1F33] leading-tight mb-3">
-          We're Actively Building &amp; Polishing
+          Site In Building Phase
         </h3>
 
         {/* Body Description */}
-        <div className="text-xs sm:text-sm text-[#4F5E6E] leading-relaxed space-y-2 mb-6">
+        <div className="text-xs sm:text-sm text-[#4F5E6E] leading-relaxed space-y-2.5 mb-6">
           <p>
-            Welcome to <strong>Plan &amp; Explore</strong>! Our boutique platform is currently in its active development and curation phase.
+            Welcome to <strong>Plan &amp; Explore</strong>! Our boutique platform is currently under active development and curation.
           </p>
-          <p className="font-editorial italic text-sm sm:text-base text-[#0B1F33]">
-            Please excuse any missing links, placeholder imagery, or ongoing adjustments while we finalize every Himalayan journey.
-          </p>
-          <p className="text-[11px] text-[#4F5E6E]/90">
-            All package itineraries and routes can be booked directly through our verified WhatsApp line.
+          <div className="p-3 bg-[#F4F1EA] rounded-xs border border-[#0B1F33]/10 text-[#0B1F33]">
+            <p className="font-editorial italic text-sm sm:text-base leading-snug">
+              “Due to some unavoidable circumstances, our next major website update will be after <strong>18 September</strong>. Thank you for your patience and understanding.”
+            </p>
+          </div>
+          <p className="text-[11px] text-[#4F5E6E]">
+            Please excuse any missing links or placeholder sections while we complete the experience. In the meantime, feel free to explore the preview or message us directly on WhatsApp for journey inquiries.
           </p>
         </div>
 
