@@ -412,12 +412,12 @@ export const PACKAGES: TravelPackage[] = [
     elevation: '598m',
     bestSeason: 'Oct – Mar · Pleasant Winters',
     groupSize: 'Curated small groups & private escapes',
-    coverImage: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=85',
+    coverImage: 'https://images.unsplash.com/photo-1699949967693-9b0084730462?auto=format&fit=crop&w=1600&q=85',
     galleryImages: [
-      'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1590080876351-941da357a5a4?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1699949967693-9b0084730462?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1664241689244-ea76002ec956?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1784561329625-7e1732f78086?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1598324789736-4861f89564a0?auto=format&fit=crop&w=1200&q=80',
     ],
     shortDescription:
       'Known as the Venice of the East, Udaipur enchants with its floating palaces, shimmering lakes, ornate havelis, and the timeless grace of Mewar\'s royal heritage.',
