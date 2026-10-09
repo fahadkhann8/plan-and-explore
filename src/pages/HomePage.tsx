@@ -13,9 +13,7 @@ import {
   MessageCircle,
   Sparkles,
   CheckCircle2,
-  Eye,
 } from 'lucide-react';
-import { ApplePeekModal } from '../components/ApplePeekModal';
 
 interface HomePageProps {
   onOpenCustomPlan: () => void;
@@ -53,7 +51,6 @@ export const HomePage: React.FC<HomePageProps> = ({
   onBookPackage,
 }) => {
   const { navigate } = useRouter();
-  const [peekPackage, setPeekPackage] = useState<TravelPackage | null>(null);
   const packagesReveal = useScrollReveal();
   const processReveal = useScrollReveal();
   const galleryReveal = useScrollReveal();
@@ -141,23 +138,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                       )}
                     </div>
 
-                    {/* Quick Peek Floating Apple Glass Pill (Top Right) */}
-                    <div className="absolute top-4 right-4">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setPeekPackage(pkg);
-                        }}
-                        className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-[11px] font-semibold flex items-center gap-1.5 shadow-md cursor-pointer"
-                        title="Apple UI Quick Peek"
-                      >
-                        <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
-                        <span>Peek Details</span>
-                      </button>
-                    </div>
-
                     {/* Content at bottom */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 text-white">
                       <h3 className="font-editorial text-2xl sm:text-3xl font-normal leading-tight mb-2 group-hover:text-[#A3B899] transition-colors">
@@ -176,28 +156,14 @@ export const HomePage: React.FC<HomePageProps> = ({
                         )}
                       </div>
 
-                      {/* Price strip with Apple Glass Peek and Navigate */}
+                      {/* Price strip with Apple Glass Navigate */}
                       <div className="mt-3.5 pt-3.5 border-t border-white/15 flex items-center justify-between">
                         <div>
                           <span className="text-[10px] uppercase tracking-wider text-white/60 block font-light">Starting from</span>
                           <span className="font-editorial text-xl font-normal text-white">{pkg.price}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setPeekPackage(pkg);
-                            }}
-                            className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-                          >
-                            <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
-                            <span>Peek</span>
-                          </button>
-                          <div className="apple-glass-button w-9 h-9 rounded-full flex items-center justify-center text-white">
-                            <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-                          </div>
+                        <div className="apple-glass-button w-10 h-10 rounded-full flex items-center justify-center text-white">
+                          <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
                         </div>
                       </div>
                     </div>
@@ -438,14 +404,6 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* ─── 7. CONTACT SECTION ─── */}
       <ContactSection onOpenCustomPlan={onOpenCustomPlan} />
-
-      {/* ─── Apple UI Peek Modal ─── */}
-      <ApplePeekModal
-        pkg={peekPackage}
-        isOpen={!!peekPackage}
-        onClose={() => setPeekPackage(null)}
-        onBook={onBookPackage}
-      />
     </div>
   );
 };

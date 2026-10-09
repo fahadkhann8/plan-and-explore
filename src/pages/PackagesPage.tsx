@@ -11,9 +11,7 @@ import {
   Users,
   Calendar,
   Sparkles,
-  Eye,
 } from 'lucide-react';
-import { ApplePeekModal } from '../components/ApplePeekModal';
 
 interface PackagesPageProps {
   onBookPackage: (pkg: TravelPackage) => void;
@@ -26,7 +24,6 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
 }) => {
   const { navigate } = useRouter();
   const [activeCategory, setActiveCategory] = useState<string>('All');
-  const [peekPackage, setPeekPackage] = useState<TravelPackage | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => { setIsLoaded(true); }, []);
@@ -170,23 +167,6 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
                     )}
                   </div>
 
-                  {/* Top Right Quick Peek Apple Glass Pill */}
-                  <div className="absolute top-4 right-4">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setPeekPackage(pkg);
-                      }}
-                      className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-[11px] font-semibold flex items-center gap-1.5 shadow-md cursor-pointer"
-                      title="Apple UI Quick Peek"
-                    >
-                      <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
-                      <span>Peek Details</span>
-                    </button>
-                  </div>
-
                   {/* Content at Bottom */}
                   <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 text-white">
                     <h2 className="font-editorial text-2xl sm:text-3xl font-normal leading-tight mb-1 group-hover:text-[#A3B899] transition-colors">
@@ -220,22 +200,8 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
                         <span className="text-[10px] uppercase tracking-wider text-white/60 block font-light">Starting from</span>
                         <span className="font-editorial text-xl text-white">{pkg.price}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setPeekPackage(pkg);
-                          }}
-                          className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-                        >
-                          <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
-                          <span>Peek</span>
-                        </button>
-                        <div className="apple-glass-button w-9 h-9 rounded-full flex items-center justify-center text-white">
-                          <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-                        </div>
+                      <div className="apple-glass-button w-10 h-10 rounded-full flex items-center justify-center text-white">
+                        <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </div>
                   </div>
@@ -281,14 +247,6 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
           </div>
         </div>
       </div>
-
-      {/* ─── Apple UI Peek Modal ─── */}
-      <ApplePeekModal
-        pkg={peekPackage}
-        isOpen={!!peekPackage}
-        onClose={() => setPeekPackage(null)}
-        onBook={onBookPackage}
-      />
     </div>
   );
 };
