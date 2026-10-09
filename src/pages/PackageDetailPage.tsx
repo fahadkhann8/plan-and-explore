@@ -126,7 +126,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
   return (
     <div className="bg-[#FAFAF7] text-[#0B1F33]">
       {/* ─── FULL-BLEED CINEMATIC HERO ─── */}
-      <section className="relative min-h-[70vh] sm:min-h-[80vh] flex flex-col justify-end overflow-hidden">
+      <section className="relative min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-between overflow-hidden pt-24 sm:pt-28">
         {/* Cycling Gallery Background */}
         {allImages.map((img, index) => (
           <div
@@ -145,19 +145,16 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33] via-[#0B1F33]/50 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0B1F33]/40 via-transparent to-transparent" />
 
-        {/* Back button (top-left) */}
-        <div className="absolute top-24 sm:top-28 left-4 sm:left-8 z-20">
+        {/* Top Navigation Bar: Back & Share in natural flow above hero content */}
+        <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link
             to="/packages"
-            className="apple-glass-button group inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-semibold"
+            className="apple-glass-button group inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-semibold cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             <span>All Packages</span>
           </Link>
-        </div>
 
-        {/* Share button (top-right) */}
-        <div className="absolute top-24 sm:top-28 right-4 sm:right-8 z-20 flex items-center gap-2">
           <button
             type="button"
             onClick={handleShare}
@@ -170,7 +167,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
 
         {/* Hero Content */}
         <div
-          className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 sm:pb-14"
+          className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10 sm:pb-14"
           style={{
             opacity: isHeroLoaded ? 1 : 0,
             transform: isHeroLoaded ? 'translateY(0)' : 'translateY(30px)',
@@ -219,11 +216,11 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => onBookPackage(pkg)}
-              className="apple-glass-button-primary apple-glass-shine group rounded-full px-8 py-4 text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer flex items-center gap-2.5 shadow-xl"
+              className="apple-glass-button-primary apple-glass-shine group rounded-full px-7 sm:px-9 py-4 text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer flex items-center gap-2.5 shadow-xl shrink-0"
             >
               <span>Reserve Spot · {pkg.price}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -233,7 +230,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
               href={getWhatsAppMessageUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="apple-glass-button-whatsapp apple-glass-shine rounded-full flex items-center gap-2 px-6 py-4 text-white text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer"
+              className="apple-glass-button-whatsapp apple-glass-shine rounded-full flex items-center gap-2 px-6 py-4 text-white text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer shrink-0"
             >
               <MessageCircle className="w-4 h-4 text-white" />
               <span>WhatsApp</span>
@@ -261,7 +258,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
       </section>
 
       {/* ─── MAIN CONTENT ─── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 pb-24 sm:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
           {/* ─── LEFT: Main Content ─── */}

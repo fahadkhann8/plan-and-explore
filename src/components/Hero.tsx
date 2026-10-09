@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, MessageCircle, Mountain, MapPin, Users } from 'lucide-react';
+import { ArrowRight, MessageCircle, Mountain, Users } from 'lucide-react';
 import { WHATSAPP_BASE_URL } from '../data/packages';
 
 interface HeroProps {
@@ -189,29 +189,6 @@ export const Hero: React.FC<HeroProps> = ({
             <MessageCircle className="w-4 h-4 text-white fill-white/20" />
             <span>WhatsApp</span>
           </a>
-        </div>
-
-        {/* Bottom Divider Strip with Location Markers */}
-        <div
-          className="flex flex-wrap items-center gap-3 sm:gap-6 pt-6 border-t border-white/15"
-          style={{
-            opacity: isLoaded ? 1 : 0,
-            transition: 'all 0.8s ease-out 1.4s',
-          }}
-        >
-          {[
-            { label: 'Jibhi & Tirthan', tag: 'From ₹4,999' },
-            { label: 'Kashmir Valley', tag: 'Coming Soon' },
-            { label: 'Old Manali', tag: 'Coming Soon' },
-          ].map((dest, i) => (
-            <div key={i} className="apple-glass-pill px-3.5 py-1.5 rounded-full flex items-center gap-2 text-white/80">
-              <MapPin className="w-3.5 h-3.5 text-[#A3B899]" />
-              <span className="text-xs font-medium">{dest.label}</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/15 text-white/90 font-semibold border border-white/10">
-                {dest.tag}
-              </span>
-            </div>
-          ))}
         </div>
       </div>
 

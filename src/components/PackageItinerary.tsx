@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Clock,
   MapPin,
@@ -191,7 +191,13 @@ const DayCard: React.FC<{
 /* ─────────────── Main Itinerary Section ─────────────── */
 export const PackageItinerary: React.FC<PackageItineraryProps> = ({ pkg }) => {
   const [expandedDays, setExpandedDays] = useState<Record<number, boolean>>({});
-  const [activeDayTab, setActiveDayTab] = useState<number>(1);
+  const [activeDayTab, setActiveDayTab] = useState<number>(pkg?.itinerary?.[0]?.day ?? 1);
+
+  useEffect(() => {
+    if (pkg?.itinerary?.length) {
+      setActiveDayTab(pkg.itinerary[0].day);
+    }
+  }, [pkg?.id]);
 
   if (!pkg?.itinerary?.length) return null;
 

@@ -1,12 +1,19 @@
 import React from 'react';
 import { MessageCircle, Sparkles } from 'lucide-react';
 import { WHATSAPP_BASE_URL } from '../data/packages';
+import { useRouter } from '../router';
 
 interface MobileStickyBarProps {
   onOpenCustomPlan: () => void;
 }
 
 export const MobileStickyBar: React.FC<MobileStickyBarProps> = ({ onOpenCustomPlan }) => {
+  const { currentPath } = useRouter();
+
+  // Hide on package detail pages to avoid overlapping the package's own reservation & WhatsApp buttons
+  if (currentPath.startsWith('/packages/')) {
+    return null;
+  }
   return (
     <aside
       id="mobile-sticky-bar"
