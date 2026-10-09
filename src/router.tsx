@@ -32,6 +32,7 @@ export const RouterProvider: React.FC<RouterProviderProps> = ({ children }) => {
   useEffect(() => {
     const handlePopState = () => {
       setCurrentPath(getNormalizedPath());
+      window.scrollTo({ top: 0, behavior: 'instant' });
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -70,7 +71,7 @@ export const RouterProvider: React.FC<RouterProviderProps> = ({ children }) => {
     if (targetPath !== currentPath) {
       window.history.pushState(null, '', targetPath);
       setCurrentPath(targetPath);
-      // Note: scroll-to-top is handled by PageTransition during its animation
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [currentPath]);
 

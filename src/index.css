@@ -104,11 +104,11 @@ netlify-drawer {
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
-/* ── Page Transition Overlay Animations ── */
-@keyframes ptBrandEnter {
+/* ── Instant Snappy Page Transition ── */
+@keyframes pageFadeIn {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -116,13 +116,8 @@ netlify-drawer {
   }
 }
 
-@keyframes ptProgressFill {
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
+.animate-page-enter {
+  animation: pageFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Parallax background attachment fallback for mobile */
