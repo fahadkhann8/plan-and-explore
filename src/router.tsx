@@ -70,9 +70,7 @@ export const RouterProvider: React.FC<RouterProviderProps> = ({ children }) => {
     if (targetPath !== currentPath) {
       window.history.pushState(null, '', targetPath);
       setCurrentPath(targetPath);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Note: scroll-to-top is handled by PageTransition during its animation
     }
   }, [currentPath]);
 

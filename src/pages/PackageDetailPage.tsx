@@ -40,8 +40,6 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
 
   useEffect(() => {
     setIsHeroLoaded(true);
-    // Scroll to top on mount
-    window.scrollTo(0, 0);
   }, [packageId]);
 
   // Find package by ID

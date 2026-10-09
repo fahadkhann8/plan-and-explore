@@ -104,6 +104,27 @@ netlify-drawer {
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
+/* ── Page Transition Overlay Animations ── */
+@keyframes ptBrandEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ptProgressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 /* Parallax background attachment fallback for mobile */
 @media (max-width: 768px) {
   [style*="background-attachment: fixed"] {

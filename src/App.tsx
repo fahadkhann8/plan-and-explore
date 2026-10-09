@@ -5,7 +5,8 @@ import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { CustomPlanModal } from './components/CustomPlanModal';
 import { BookingModal } from './components/BookingModal';
-import { UnderConstructionModal } from './components/UnderConstructionModal';
+import { PageTransition } from './components/PageTransition';
+
 import { HomePage } from './pages/HomePage';
 import { PackagesPage } from './pages/PackagesPage';
 import { PackageDetailPage } from './pages/PackageDetailPage';
@@ -67,8 +68,12 @@ function AppContent() {
       {/* 1. Global Navigation */}
       <Navbar onOpenCustomPlan={() => setCustomPlanOpen(true)} />
 
-      {/* 2. Active Page Content */}
-      <main className="flex-1">{renderCurrentView()}</main>
+      {/* 2. Active Page Content — wrapped in page transition */}
+      <main className="flex-1">
+        <PageTransition routeKey={currentPath}>
+          {renderCurrentView()}
+        </PageTransition>
+      </main>
 
       {/* 3. Global Footer */}
       <Footer onOpenCustomPlan={() => setCustomPlanOpen(true)} />
@@ -90,8 +95,7 @@ function AppContent() {
         onClose={() => setBookingPackage(null)}
       />
 
-      {/* 7. Building Phase Notice Modal */}
-      <UnderConstructionModal />
+
     </div>
   );
 }
