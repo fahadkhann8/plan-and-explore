@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface PageTransitionProps {
   routeKey: string;
@@ -12,20 +12,16 @@ type TransitionPhase =
   | 'overlay-exit'   // Overlay sliding out, revealing new page
   ;
 
-const OVERLAY_ENTER_MS = 450;  // Time for overlay to fully cover
-const SWAP_DELAY_MS    = 300;  // Brief hold on overlay for polish
-const OVERLAY_EXIT_MS  = 500;  // Time for overlay to reveal new page
+const OVERLAY_ENTER_MS = 420;
+const SWAP_DELAY_MS    = 250;
+const OVERLAY_EXIT_MS  = 450;
 
 /**
  * Premium full-screen page transition.
  *
- * Instead of a basic fade that scrolls to top mid-blink, this component:
  * 1. Slides a branded overlay curtain over the current page
- * 2. Swaps in the new page content behind it
- * 3. Scrolls to top while hidden
- * 4. Slides the overlay away to reveal the fresh page
- *
- * The result feels like navigating to a completely new page — smooth & polished.
+ * 2. Swaps in the new page content behind it & scrolls to top
+ * 3. Slides the overlay away to reveal the fresh page
  */
 export const PageTransition: React.FC<PageTransitionProps> = ({
   routeKey,
@@ -34,65 +30,70 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
   const [displayedChildren, setDisplayedChildren] = useState(children);
   const [displayedKey, setDisplayedKey] = useState(routeKey);
   const [phase, setPhase] = useState<TransitionPhase>('idle');
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingChildren = useRef(children);
-  const pendingKey = useRef(routeKey);
 
-  // Always keep latest children/key in refs so the swap uses the freshest content
-  pendingChildren.current = children;
-  pendingKey.current = routeKey;
+  // Refs to hold latest values without causing effect re-runs
+  const latestChildren = useRef(children);
+  const latestKey = useRef(routeKey);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  const clearPendingTimeout = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-  }, []);
+  // Always keep refs up to date
+  latestChildren.current = children;
+  latestKey.current = routeKey;
 
+  // ── Effect 1: Update children in-place when on the same route ──
   useEffect(() => {
-    // Same route — just update children in-place (no transition)
     if (routeKey === displayedKey) {
       setDisplayedChildren(children);
-      return;
     }
+  }, [children, routeKey, displayedKey]);
 
-    // Don't re-trigger if already transitioning
-    if (phase !== 'idle') return;
+  // ── Effect 2: Run transition when route changes ──
+  // ONLY depends on routeKey so phase changes don't retrigger/kill the chain
+  useEffect(() => {
+    // On first mount, displayedKey is set from initial routeKey, so this won't fire.
+    // On subsequent route changes, displayedKey is still the OLD route.
+    if (routeKey === displayedKey) return;
 
-    // ── Step 1: Slide overlay in ──
+    // Clear any previous transition chain
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+
+    // ── Step 1: Overlay slides in ──
     setPhase('overlay-enter');
 
-    timeoutRef.current = setTimeout(() => {
+    const t1 = setTimeout(() => {
       // ── Step 2: Swap content behind overlay ──
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      setDisplayedChildren(latestChildren.current);
+      setDisplayedKey(latestKey.current);
       setPhase('swapping');
 
-      // Scroll to top while overlay covers everything
-      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-
-      // Swap in new page content
-      setDisplayedChildren(pendingChildren.current);
-      setDisplayedKey(pendingKey.current);
-
-      timeoutRef.current = setTimeout(() => {
-        // ── Step 3: Slide overlay out ──
-        // Use rAF to ensure the browser has painted the new DOM first
+      const t2 = setTimeout(() => {
+        // ── Step 3: Overlay slides out ──
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             setPhase('overlay-exit');
 
-            timeoutRef.current = setTimeout(() => {
+            const t3 = setTimeout(() => {
               // ── Step 4: Done ──
               setPhase('idle');
             }, OVERLAY_EXIT_MS);
+            timeoutsRef.current.push(t3);
           });
         });
       }, SWAP_DELAY_MS);
+      timeoutsRef.current.push(t2);
     }, OVERLAY_ENTER_MS);
+    timeoutsRef.current.push(t1);
 
-    return clearPendingTimeout;
-  }, [routeKey, children, displayedKey, phase, clearPendingTimeout]);
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+      timeoutsRef.current = [];
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routeKey]);
 
-  // Content fade style — subtle fade-in when overlay exits
+  // Content fade style
   const contentStyle: React.CSSProperties =
     phase === 'overlay-exit'
       ? {
@@ -101,21 +102,12 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
           transition: `opacity ${OVERLAY_EXIT_MS}ms ease-out, transform ${OVERLAY_EXIT_MS}ms ease-out`,
         }
       : phase === 'swapping'
-      ? {
-          opacity: 0,
-          transform: 'translateY(12px)',
-        }
-      : {
-          opacity: 1,
-          transform: 'translateY(0)',
-        };
+      ? { opacity: 0, transform: 'translateY(12px)' }
+      : { opacity: 1, transform: 'translateY(0)' };
 
   return (
     <>
-      {/* ── Page content ── */}
       <div style={contentStyle}>{displayedChildren}</div>
-
-      {/* ── Full-screen transition overlay ── */}
       <TransitionOverlay phase={phase} />
     </>
   );
@@ -123,84 +115,44 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
 
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Overlay component — the branded loading curtain
+   Overlay — the branded loading curtain
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-interface OverlayProps {
-  phase: TransitionPhase;
-}
-
-const TransitionOverlay: React.FC<OverlayProps> = ({ phase }) => {
+const TransitionOverlay: React.FC<{ phase: TransitionPhase }> = ({ phase }) => {
   if (phase === 'idle') return null;
 
-  // Determine overlay transform
-  const getOverlayStyle = (): React.CSSProperties => {
-    switch (phase) {
-      case 'overlay-enter':
-        return {
+  const panelStyle: React.CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(145deg, #0B1F33 0%, #162d45 40%, #1a3a2a 100%)',
+    willChange: 'transform',
+    ...(phase === 'overlay-enter'
+      ? {
           transform: 'translateY(0)',
           opacity: 1,
-          transition: `transform ${OVERLAY_ENTER_MS}ms cubic-bezier(0.76, 0, 0.24, 1), opacity ${OVERLAY_ENTER_MS * 0.5}ms ease-out`,
-        };
-      case 'swapping':
-        return {
-          transform: 'translateY(0)',
-          opacity: 1,
-        };
-      case 'overlay-exit':
-        return {
+          transition: `transform ${OVERLAY_ENTER_MS}ms cubic-bezier(0.76, 0, 0.24, 1), opacity ${OVERLAY_ENTER_MS * 0.3}ms ease-out`,
+        }
+      : phase === 'swapping'
+      ? { transform: 'translateY(0)', opacity: 1 }
+      : phase === 'overlay-exit'
+      ? {
           transform: 'translateY(-100%)',
           opacity: 1,
           transition: `transform ${OVERLAY_EXIT_MS}ms cubic-bezier(0.76, 0, 0.24, 1)`,
-        };
-      default:
-        return {
-          transform: 'translateY(100%)',
-          opacity: 0,
-        };
-    }
+        }
+      : { transform: 'translateY(100%)', opacity: 0 }
+    ),
   };
 
-  const isVisible = phase === 'overlay-enter' || phase === 'swapping' || phase === 'overlay-exit';
+  const showContent = phase === 'overlay-enter' || phase === 'swapping';
 
   return (
     <div
       className="fixed inset-0 z-[9999] pointer-events-none"
       aria-hidden="true"
-      style={{ visibility: isVisible ? 'visible' : 'hidden' }}
     >
-      {/* Main overlay panel */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(145deg, #0B1F33 0%, #162d45 40%, #1a3a2a 100%)',
-          willChange: 'transform',
-          ...(phase === 'overlay-enter'
-            ? {
-                transform: 'translateY(0)',
-                opacity: 1,
-                transition: `transform ${OVERLAY_ENTER_MS}ms cubic-bezier(0.76, 0, 0.24, 1), opacity ${OVERLAY_ENTER_MS * 0.3}ms ease-out`,
-              }
-            : phase === 'swapping'
-            ? {
-                transform: 'translateY(0)',
-                opacity: 1,
-              }
-            : phase === 'overlay-exit'
-            ? {
-                transform: 'translateY(-100%)',
-                opacity: 1,
-                transition: `transform ${OVERLAY_EXIT_MS}ms cubic-bezier(0.76, 0, 0.24, 1)`,
-              }
-            : {
-                transform: 'translateY(100%)',
-                opacity: 0,
-              }
-          ),
-        }}
-      >
-        {/* ── Centered brand content ── */}
+      <div style={panelStyle}>
+        {/* Centered brand */}
         <div
           style={{
             position: 'absolute',
@@ -210,22 +162,21 @@ const TransitionOverlay: React.FC<OverlayProps> = ({ phase }) => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '20px',
-            opacity: phase === 'swapping' || phase === 'overlay-enter' ? 1 : 0,
-            transition: 'opacity 200ms ease',
+            opacity: showContent ? 1 : 0,
+            transition: 'opacity 150ms ease',
           }}
         >
-          {/* Brand mark */}
+          {/* Brand name */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              animation: phase === 'overlay-enter' || phase === 'swapping'
-                ? 'ptBrandEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both'
+              animation: showContent
+                ? 'ptBrandEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both'
                 : 'none',
             }}
           >
-            {/* Decorative dot */}
             <div
               style={{
                 width: '8px',
@@ -258,7 +209,7 @@ const TransitionOverlay: React.FC<OverlayProps> = ({ phase }) => {
             />
           </div>
 
-          {/* Loading progress bar */}
+          {/* Progress bar */}
           <div
             style={{
               width: '120px',
@@ -266,8 +217,8 @@ const TransitionOverlay: React.FC<OverlayProps> = ({ phase }) => {
               background: 'rgba(250, 250, 247, 0.1)',
               borderRadius: '2px',
               overflow: 'hidden',
-              animation: phase === 'overlay-enter' || phase === 'swapping'
-                ? 'ptBrandEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both'
+              animation: showContent
+                ? 'ptBrandEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both'
                 : 'none',
             }}
           >
@@ -276,14 +227,14 @@ const TransitionOverlay: React.FC<OverlayProps> = ({ phase }) => {
                 height: '100%',
                 background: 'linear-gradient(90deg, #A3B899, #5A5A40)',
                 borderRadius: '2px',
-                animation: phase !== 'idle'
-                  ? 'ptProgressFill 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both'
+                animation: showContent
+                  ? 'ptProgressFill 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both'
                   : 'none',
               }}
             />
           </div>
 
-          {/* Subtle tagline */}
+          {/* Tagline */}
           <span
             style={{
               fontSize: '10px',
@@ -291,8 +242,8 @@ const TransitionOverlay: React.FC<OverlayProps> = ({ phase }) => {
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
               color: 'rgba(163, 184, 153, 0.6)',
-              animation: phase === 'overlay-enter' || phase === 'swapping'
-                ? 'ptBrandEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both'
+              animation: showContent
+                ? 'ptBrandEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both'
                 : 'none',
             }}
           >
