@@ -149,7 +149,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
         <div className="absolute top-24 sm:top-28 left-4 sm:left-8 z-20">
           <Link
             to="/packages"
-            className="group inline-flex items-center gap-2 px-4 py-2.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-white text-xs font-semibold hover:bg-white/20 transition-all"
+            className="apple-glass-button group inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-semibold"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             <span>All Packages</span>
@@ -161,7 +161,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
           <button
             type="button"
             onClick={handleShare}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-white text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+            className="apple-glass-button inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-white text-xs font-semibold cursor-pointer"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span>{copied ? 'Copied!' : 'Share'}</span>
@@ -179,17 +179,17 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
         >
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white text-[10px] font-bold tracking-widest uppercase border border-white/20">
+            <span className="apple-glass-pill px-3 py-1.5 rounded-full text-white text-[10px] font-bold tracking-widest uppercase">
               {pkg.packageNumber}
             </span>
             {pkg.frequency && (
-              <span className="px-3 py-1.5 rounded-full bg-[#5A5A40]/60 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase border border-[#5A5A40]/30">
+              <span className="apple-glass-pill px-3 py-1.5 rounded-full bg-[#5A5A40]/80 text-white text-[10px] font-bold tracking-wider uppercase">
                 <Calendar className="w-3 h-3 inline mr-1" />
                 {pkg.frequency}
               </span>
             )}
             {pkg.bestSeason && (
-              <span className="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-white/80 text-[10px] font-medium border border-white/10">
+              <span className="apple-glass-pill px-3 py-1.5 rounded-full text-white/90 text-[10px] font-medium">
                 {pkg.bestSeason}
               </span>
             )}
@@ -223,7 +223,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
             <button
               type="button"
               onClick={() => onBookPackage(pkg)}
-              className="group bg-white text-[#0B1F33] px-8 py-4 text-xs sm:text-sm font-bold tracking-widest uppercase hover:bg-[#A3B899] transition-all duration-300 shadow-xl active:scale-95 cursor-pointer flex items-center gap-2.5"
+              className="apple-glass-button-primary apple-glass-shine group rounded-full px-8 py-4 text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer flex items-center gap-2.5 shadow-xl"
             >
               <span>Reserve Spot · {pkg.price}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -233,9 +233,9 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
               href={getWhatsAppMessageUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-4 border-2 border-white/30 text-white text-xs sm:text-sm font-bold tracking-widest uppercase hover:bg-white/10 hover:border-white/60 transition-all backdrop-blur-sm"
+              className="apple-glass-button-whatsapp apple-glass-shine rounded-full flex items-center gap-2 px-6 py-4 text-white text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer"
             >
-              <MessageCircle className="w-4 h-4 text-[#25D366]" />
+              <MessageCircle className="w-4 h-4 text-white" />
               <span>WhatsApp</span>
             </a>
           </div>
@@ -364,8 +364,8 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
           <div className="lg:col-span-4">
             <div className="sticky top-24 space-y-5">
 
-              {/* Booking Card — glassmorphism style */}
-              <div className="bg-white rounded-xl p-6 border border-[#0B1F33]/10 shadow-lg">
+              {/* Booking Card — Apple liquid glassmorphism style */}
+              <div className="apple-glass-card rounded-2xl p-6">
                 <div className="mb-5">
                   <span className="text-[10px] uppercase tracking-widest text-[#5A5A40] font-bold block mb-1">
                     Reserve Your Journey
@@ -385,7 +385,7 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
                   <button
                     type="button"
                     onClick={() => onBookPackage(pkg)}
-                    className="w-full py-4 px-4 bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs font-bold uppercase tracking-widest rounded-lg transition-all shadow-md hover:shadow-lg active:scale-[0.98] min-h-[48px] cursor-pointer flex items-center justify-center gap-2"
+                    className="apple-glass-button-primary apple-glass-shine w-full py-4 px-4 rounded-full text-xs font-bold uppercase tracking-widest min-h-[48px] cursor-pointer flex items-center justify-center gap-2 shadow-md"
                   >
                     <span>Reserve Spot Now</span>
                     <ArrowRight className="w-4 h-4" />
@@ -395,9 +395,9 @@ export const PackageDetailPage: React.FC<PackageDetailPageProps> = ({
                     href={getWhatsAppMessageUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 py-3.5 px-4 border-2 border-[#0B1F33]/15 hover:border-[#0B1F33]/40 text-[#0B1F33] text-xs font-semibold uppercase tracking-wider rounded-lg transition-all hover:bg-[#F4F1EA] min-h-[48px]"
+                    className="apple-glass-button-whatsapp apple-glass-shine w-full flex items-center justify-center gap-2 py-3.5 px-4 text-xs font-semibold uppercase tracking-wider rounded-full min-h-[48px] shadow-sm"
                   >
-                    <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                    <MessageCircle className="w-4 h-4 text-white" />
                     <span>Chat on WhatsApp</span>
                   </a>
                 </div>

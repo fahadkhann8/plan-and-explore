@@ -126,3 +126,163 @@ netlify-drawer {
     background-attachment: scroll !important;
   }
 }
+
+/* ── Apple iOS Liquid Glass UI System ── */
+.apple-glass {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05),
+    0 8px 32px 0 rgba(0, 0, 0, 0.12);
+}
+
+.apple-glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.8),
+    0 20px 48px -12px rgba(11, 31, 51, 0.18);
+}
+
+.apple-glass-pill {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.apple-glass-button {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05),
+    0 4px 16px 0 rgba(0, 0, 0, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateZ(0);
+}
+
+.apple-glass-button:hover {
+  background: rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.7),
+    0 8px 24px 0 rgba(0, 0, 0, 0.18);
+  transform: translateY(-1.5px);
+}
+
+.apple-glass-button:active {
+  transform: scale(0.96) translateY(0);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
+    0 2px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.apple-glass-button-primary {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0B1F33;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04),
+    0 8px 24px 0 rgba(0, 0, 0, 0.14);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateZ(0);
+}
+
+.apple-glass-button-primary:hover {
+  background: #A3B899;
+  border-color: #A3B899;
+  color: #0B1F33;
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.7),
+    0 12px 30px 0 rgba(163, 184, 153, 0.35);
+  transform: translateY(-1.5px);
+}
+
+.apple-glass-button-primary:active {
+  transform: scale(0.96) translateY(0);
+}
+
+.apple-glass-button-whatsapp {
+  position: relative;
+  overflow: hidden;
+  background: rgba(37, 211, 102, 0.22);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(37, 211, 102, 0.4);
+  color: #FFFFFF;
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+    0 4px 16px 0 rgba(37, 211, 102, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-glass-button-whatsapp:hover {
+  background: rgba(37, 211, 102, 0.35);
+  border-color: rgba(37, 211, 102, 0.6);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.65),
+    0 8px 24px 0 rgba(37, 211, 102, 0.3);
+  transform: translateY(-1.5px);
+}
+
+.apple-glass-button-whatsapp:active {
+  transform: scale(0.96) translateY(0);
+}
+
+/* Glass specular light sweep on hover */
+.apple-glass-shine::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -70%;
+  width: 50%;
+  height: 220%;
+  background: linear-gradient(
+    65deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-glass-shine:hover::after {
+  opacity: 1;
+  transform: rotate(25deg) translateX(360%);
+}
+
+/* Apple Peek animation */
+@keyframes applePeekIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-apple-peek-in {
+  animation: applePeekIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

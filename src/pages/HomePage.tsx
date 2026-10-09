@@ -13,7 +13,9 @@ import {
   MessageCircle,
   Sparkles,
   CheckCircle2,
+  Eye,
 } from 'lucide-react';
+import { ApplePeekModal } from '../components/ApplePeekModal';
 
 interface HomePageProps {
   onOpenCustomPlan: () => void;
@@ -51,6 +53,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onBookPackage,
 }) => {
   const { navigate } = useRouter();
+  const [peekPackage, setPeekPackage] = useState<TravelPackage | null>(null);
   const packagesReveal = useScrollReveal();
   const processReveal = useScrollReveal();
   const galleryReveal = useScrollReveal();
@@ -92,7 +95,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
             <Link
               to="/packages"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#5A5A40] hover:text-[#0B1F33] transition-colors group cursor-pointer"
+              className="apple-glass-button px-5 py-2.5 rounded-full inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#5A5A40] hover:text-[#0B1F33] transition-colors group cursor-pointer"
             >
               <span>View All</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -105,40 +108,54 @@ export const HomePage: React.FC<HomePageProps> = ({
               const isComingSoon = pkg.price === 'Coming Soon';
 
               return (
-                <Link
+                <div
                   key={pkg.id}
-                  to={`/packages/${pkg.id}`}
-                  className="group relative block rounded-xl overflow-hidden cursor-pointer"
+                  className="group relative block rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl"
                   style={{
                     opacity: packagesReveal.isVisible ? 1 : 0,
                     transform: packagesReveal.isVisible ? 'translateY(0)' : 'translateY(30px)',
                     transition: `all 0.6s ease-out ${0.15 * (index + 1)}s`,
                   }}
+                  onClick={() => navigate(`/packages/${pkg.id}`)}
                 >
                   {/* Large Image */}
                   <div className="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-[#E8E8E1]">
                     <img
                       src={pkg.coverImage}
                       alt={pkg.destination}
-                      className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-[1200ms] ease-out"
+                      className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-[1200ms] ease-out"
                       loading="lazy"
                     />
                     {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33]/90 via-[#0B1F33]/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33]/92 via-[#0B1F33]/25 to-transparent" />
 
-                    {/* Hover glow ring */}
-                    <div className="absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/30 ring-inset transition-all duration-300" />
-
-                    {/* Badge */}
+                    {/* Apple Frosted Badges */}
                     <div className="absolute top-4 left-4 flex items-center gap-2">
-                      <span className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white text-[10px] font-bold tracking-widest uppercase border border-white/20 shadow-lg">
+                      <span className="apple-glass-pill px-3 py-1.5 rounded-full text-white text-[10px] font-bold tracking-widest uppercase">
                         {pkg.packageNumber}
                       </span>
                       {isComingSoon && (
-                        <span className="px-3 py-1.5 rounded-full bg-[#5A5A40]/80 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase">
+                        <span className="apple-glass-pill px-3 py-1.5 rounded-full bg-[#5A5A40]/80 text-white text-[10px] font-bold tracking-wider uppercase">
                           Coming Soon
                         </span>
                       )}
+                    </div>
+
+                    {/* Quick Peek Floating Apple Glass Pill (Top Right) */}
+                    <div className="absolute top-4 right-4">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setPeekPackage(pkg);
+                        }}
+                        className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-[11px] font-semibold flex items-center gap-1.5 shadow-md cursor-pointer"
+                        title="Apple UI Quick Peek"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
+                        <span>Peek Details</span>
+                      </button>
                     </div>
 
                     {/* Content at bottom */}
@@ -146,7 +163,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       <h3 className="font-editorial text-2xl sm:text-3xl font-normal leading-tight mb-2 group-hover:text-[#A3B899] transition-colors">
                         {pkg.destination}
                       </h3>
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-white/70">
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-white/75">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5 text-[#A3B899]" />
                           {pkg.duration}
@@ -159,19 +176,33 @@ export const HomePage: React.FC<HomePageProps> = ({
                         )}
                       </div>
 
-                      {/* Price strip */}
-                      <div className="mt-3 pt-3 border-t border-white/15 flex items-center justify-between">
+                      {/* Price strip with Apple Glass Peek and Navigate */}
+                      <div className="mt-3.5 pt-3.5 border-t border-white/15 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] uppercase tracking-wider text-white/50 block">Starting from</span>
+                          <span className="text-[10px] uppercase tracking-wider text-white/60 block font-light">Starting from</span>
                           <span className="font-editorial text-xl font-normal text-white">{pkg.price}</span>
                         </div>
-                        <div className="w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/25 transition-colors">
-                          <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setPeekPackage(pkg);
+                            }}
+                            className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                          >
+                            <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
+                            <span>Peek</span>
+                          </button>
+                          <div className="apple-glass-button w-9 h-9 rounded-full flex items-center justify-center text-white">
+                            <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
@@ -370,7 +401,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               to="/packages"
-              className="group inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-white text-[#0B1F33] text-xs sm:text-sm font-bold uppercase tracking-widest hover:bg-[#A3B899] transition-all duration-300 shadow-xl active:scale-95"
+              className="apple-glass-button-primary apple-glass-shine rounded-full group inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-5 text-xs sm:text-sm font-bold uppercase tracking-widest cursor-pointer shadow-xl"
             >
               <span>Explore Packages</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -380,7 +411,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               href={WHATSAPP_BASE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 sm:py-5 bg-transparent border-2 border-white/30 text-white text-xs sm:text-sm font-bold uppercase tracking-widest hover:bg-white/10 hover:border-white/60 transition-all duration-300 active:scale-95 backdrop-blur-sm"
+              className="apple-glass-button-whatsapp apple-glass-shine rounded-full inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 sm:py-5 text-white text-xs sm:text-sm font-bold uppercase tracking-widest cursor-pointer shadow-lg"
             >
               <MessageCircle className="w-4 h-4 text-[#25D366]" />
               <span>Chat With Us</span>
@@ -388,16 +419,16 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Trust icons */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-white/50">
-            <span className="flex items-center gap-1.5">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-xs text-white/70">
+            <span className="apple-glass-pill px-3 py-1.5 rounded-full flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#A3B899]" />
               Verified Mountain Stays
             </span>
-            <span className="flex items-center gap-1.5">
+            <span className="apple-glass-pill px-3 py-1.5 rounded-full flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#A3B899]" />
               Small Group Escapes
             </span>
-            <span className="flex items-center gap-1.5">
+            <span className="apple-glass-pill px-3 py-1.5 rounded-full flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#A3B899]" />
               Direct WhatsApp Line
             </span>
@@ -407,6 +438,14 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* ─── 7. CONTACT SECTION ─── */}
       <ContactSection onOpenCustomPlan={onOpenCustomPlan} />
+
+      {/* ─── Apple UI Peek Modal ─── */}
+      <ApplePeekModal
+        pkg={peekPackage}
+        isOpen={!!peekPackage}
+        onClose={() => setPeekPackage(null)}
+        onBook={onBookPackage}
+      />
     </div>
   );
 };

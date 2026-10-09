@@ -114,23 +114,23 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCustomPlan }) => {
             </nav>
 
             {/* Right Side Actions */}
-            <div className="hidden sm:flex items-center gap-5">
+            <div className="hidden sm:flex items-center gap-3">
               <a
                 id="navbar-whatsapp-cta"
                 href={WHATSAPP_BASE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-medium text-[#4F5E6E] hover:text-[#0B1F33] transition-colors flex items-center gap-1.5 min-h-[44px]"
+                className="apple-glass-button-whatsapp apple-glass-shine text-xs font-semibold px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
                 title="Chat directly with us on WhatsApp"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
-                <span>Chat on WhatsApp</span>
+                <MessageCircle className="w-3.5 h-3.5 text-white" />
+                <span>WhatsApp</span>
               </a>
 
               <button
                 id="navbar-have-a-plan-btn"
                 onClick={onOpenCustomPlan}
-                className="inline-flex items-center gap-1.5 border border-[#0B1F33] px-4 py-2.5 min-h-[44px] text-xs font-semibold uppercase tracking-wider text-[#0B1F33] hover:bg-[#0B1F33] hover:text-white transition-all active:scale-95 cursor-pointer"
+                className="apple-glass-button apple-glass-shine inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider text-[#0B1F33] bg-white/80 border border-[#0B1F33]/15 hover:bg-white transition-all cursor-pointer shadow-xs"
               >
                 <span>Have a Plan?</span>
               </button>

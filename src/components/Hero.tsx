@@ -165,7 +165,7 @@ export const Hero: React.FC<HeroProps> = ({
           <button
             id="hero-explore-packages-btn"
             onClick={onExploreClick}
-            className="group bg-white text-[#0B1F33] px-8 sm:px-10 py-4 sm:py-5 text-xs sm:text-sm font-bold tracking-widest uppercase hover:bg-[#A3B899] hover:text-[#0B1F33] transition-all duration-300 shadow-xl active:scale-95 cursor-pointer flex items-center gap-3"
+            className="apple-glass-button-primary apple-glass-shine group rounded-full text-[#0B1F33] px-8 sm:px-10 py-4 sm:py-5 text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer flex items-center gap-3"
           >
             <span>Explore Packages</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -174,7 +174,7 @@ export const Hero: React.FC<HeroProps> = ({
           <button
             id="hero-have-a-plan-btn"
             onClick={onHaveAPlanClick}
-            className="text-white px-8 sm:px-10 py-4 sm:py-5 text-xs sm:text-sm font-bold tracking-widest uppercase border-2 border-white/30 hover:bg-white/10 hover:border-white/60 backdrop-blur-sm transition-all duration-300 active:scale-95 cursor-pointer"
+            className="apple-glass-button apple-glass-shine rounded-full text-white px-8 sm:px-10 py-4 sm:py-5 text-xs sm:text-sm font-bold tracking-widest uppercase cursor-pointer"
           >
             Have a Plan?
           </button>
@@ -184,7 +184,7 @@ export const Hero: React.FC<HeroProps> = ({
             href={WHATSAPP_BASE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-4 sm:py-5 rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/35 border border-[#25D366]/40 text-white text-xs sm:text-sm font-semibold transition-all backdrop-blur-sm"
+            className="apple-glass-button-whatsapp apple-glass-shine flex items-center gap-2 px-6 sm:px-7 py-4 sm:py-5 rounded-full text-white text-xs sm:text-sm font-semibold cursor-pointer"
           >
             <MessageCircle className="w-4 h-4 text-[#25D366]" />
             <span>WhatsApp</span>
@@ -193,7 +193,7 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* Bottom Divider Strip with Location Markers */}
         <div
-          className="flex flex-wrap items-center gap-6 sm:gap-10 pt-6 border-t border-white/15"
+          className="flex flex-wrap items-center gap-3 sm:gap-6 pt-6 border-t border-white/15"
           style={{
             opacity: isLoaded ? 1 : 0,
             transition: 'all 0.8s ease-out 1.4s',
@@ -204,10 +204,10 @@ export const Hero: React.FC<HeroProps> = ({
             { label: 'Kashmir Valley', tag: 'Coming Soon' },
             { label: 'Old Manali', tag: 'Coming Soon' },
           ].map((dest, i) => (
-            <div key={i} className="flex items-center gap-2 text-white/60">
+            <div key={i} className="apple-glass-pill px-3.5 py-1.5 rounded-full flex items-center gap-2 text-white/80">
               <MapPin className="w-3.5 h-3.5 text-[#A3B899]" />
               <span className="text-xs font-medium">{dest.label}</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/50 font-semibold">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/15 text-white/90 font-semibold border border-white/10">
                 {dest.tag}
               </span>
             </div>

@@ -11,7 +11,9 @@ import {
   Users,
   Calendar,
   Sparkles,
+  Eye,
 } from 'lucide-react';
+import { ApplePeekModal } from '../components/ApplePeekModal';
 
 interface PackagesPageProps {
   onBookPackage: (pkg: TravelPackage) => void;
@@ -24,6 +26,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
 }) => {
   const { navigate } = useRouter();
   const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [peekPackage, setPeekPackage] = useState<TravelPackage | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => { setIsLoaded(true); }, []);
@@ -105,7 +108,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
 
       {/* ─── FILTERS + GRID ─── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-8 sm:pt-10 pb-24">
-        {/* Category Filter Pills */}
+        {/* Category Filter Pills — Apple Segmented Glass */}
         <div className="flex flex-wrap items-center gap-2 mb-10" role="tablist">
           {categories.map((cat) => (
             <button
@@ -114,8 +117,8 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               onClick={() => setActiveCategory(cat)}
               className={`px-5 py-2.5 min-h-[42px] rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 activeCategory === cat
-                  ? 'bg-[#0B1F33] text-white shadow-md'
-                  : 'bg-white text-[#4F5E6E] hover:text-[#0B1F33] border border-[#0B1F33]/10 hover:bg-[#F4F1EA]'
+                  ? 'apple-glass-button-primary bg-[#0B1F33] text-white shadow-lg'
+                  : 'apple-glass-button bg-white/70 text-[#4F5E6E] hover:text-[#0B1F33] border border-[#0B1F33]/10 hover:bg-white'
               }`}
             >
               {cat}
@@ -123,49 +126,65 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
           ))}
         </div>
 
-        {/* Package Cards Grid — Image-forward */}
+        {/* Package Cards Grid — Image-forward with Apple Glass */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
           {filteredPackages.map((pkg, index) => {
             const isComingSoon = pkg.price === 'Coming Soon';
 
             return (
-              <Link
+              <div
                 key={pkg.id}
-                to={`/packages/${pkg.id}`}
-                className="group relative block rounded-xl overflow-hidden cursor-pointer"
+                className="group relative block rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl"
                 style={{
                   opacity: isLoaded ? 1 : 0,
                   transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
                   transition: `all 0.6s ease-out ${0.1 * (index + 1)}s`,
                 }}
+                onClick={() => navigate(`/packages/${pkg.id}`)}
               >
                 {/* Tall Image */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-[#E8E8E1]">
                   <img
                     src={pkg.coverImage}
                     alt={pkg.destination}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1200ms] ease-out"
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-[1200ms] ease-out"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33]/90 via-[#0B1F33]/30 to-transparent" />
-                  <div className="absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/25 ring-inset transition-all duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F33]/92 via-[#0B1F33]/30 to-transparent" />
 
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex items-center gap-2">
-                    <span className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white text-[10px] font-bold tracking-widest uppercase border border-white/20 shadow-lg">
+                    <span className="apple-glass-pill px-3 py-1.5 rounded-full text-white text-[10px] font-bold tracking-widest uppercase">
                       {pkg.packageNumber}
                     </span>
                     {isComingSoon && (
-                      <span className="px-3 py-1.5 rounded-full bg-[#5A5A40]/80 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase">
+                      <span className="apple-glass-pill px-3 py-1.5 rounded-full bg-[#5A5A40]/80 text-white text-[10px] font-bold tracking-wider uppercase">
                         Coming Soon
                       </span>
                     )}
                     {pkg.frequency && !isComingSoon && (
-                      <span className="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md text-white/90 text-[10px] font-medium border border-white/15">
+                      <span className="apple-glass-pill px-2.5 py-1 rounded-full text-white/90 text-[10px] font-medium">
                         <Calendar className="w-3 h-3 inline mr-0.5" />
                         {pkg.frequency}
                       </span>
                     )}
+                  </div>
+
+                  {/* Top Right Quick Peek Apple Glass Pill */}
+                  <div className="absolute top-4 right-4">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setPeekPackage(pkg);
+                      }}
+                      className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-[11px] font-semibold flex items-center gap-1.5 shadow-md cursor-pointer"
+                      title="Apple UI Quick Peek"
+                    >
+                      <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
+                      <span>Peek Details</span>
+                    </button>
                   </div>
 
                   {/* Content at Bottom */}
@@ -173,12 +192,12 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
                     <h2 className="font-editorial text-2xl sm:text-3xl font-normal leading-tight mb-1 group-hover:text-[#A3B899] transition-colors">
                       {pkg.destination}
                     </h2>
-                    <p className="text-xs text-white/60 line-clamp-1 mb-3 font-light">
+                    <p className="text-xs text-white/70 line-clamp-1 mb-3 font-light">
                       {pkg.subtitle}
                     </p>
 
                     {/* Quick Stats */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-white/70 mb-3">
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-white/75 mb-3">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5 text-[#A3B899]" />
                         {pkg.duration}
@@ -196,18 +215,32 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
                     </div>
 
                     {/* Price + CTA */}
-                    <div className="flex items-center justify-between pt-3 border-t border-white/15">
+                    <div className="flex items-center justify-between pt-3.5 border-t border-white/15">
                       <div>
-                        <span className="text-[10px] uppercase tracking-wider text-white/50 block">Starting from</span>
+                        <span className="text-[10px] uppercase tracking-wider text-white/60 block font-light">Starting from</span>
                         <span className="font-editorial text-xl text-white">{pkg.price}</span>
                       </div>
-                      <div className="w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/25 transition-colors">
-                        <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setPeekPackage(pkg);
+                          }}
+                          className="apple-glass-button apple-glass-shine px-3 py-1.5 rounded-full text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <Eye className="w-3.5 h-3.5 text-[#A3B899]" />
+                          <span>Peek</span>
+                        </button>
+                        <div className="apple-glass-button w-9 h-9 rounded-full flex items-center justify-center text-white">
+                          <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>
@@ -240,7 +273,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
             <button
               type="button"
               onClick={onOpenCustomPlan}
-              className="group px-8 py-5 bg-white text-[#0B1F33] text-xs font-bold uppercase tracking-widest hover:bg-[#A3B899] transition-all duration-300 shadow-xl active:scale-95 cursor-pointer whitespace-nowrap flex items-center gap-3"
+              className="apple-glass-button-primary apple-glass-shine rounded-full group px-8 py-5 text-xs font-bold uppercase tracking-widest cursor-pointer whitespace-nowrap flex items-center gap-3 shadow-xl"
             >
               <span>Request Custom Itinerary</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -248,6 +281,14 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* ─── Apple UI Peek Modal ─── */}
+      <ApplePeekModal
+        pkg={peekPackage}
+        isOpen={!!peekPackage}
+        onClose={() => setPeekPackage(null)}
+        onBook={onBookPackage}
+      />
     </div>
   );
 };
