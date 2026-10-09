@@ -86,9 +86,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCustomPlan }) => {
                 href={WHATSAPP_BASE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-semibold text-white transition-colors mb-4"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-bold transition-all shadow-md hover:shadow-lg hover:shadow-green-500/25 mb-4"
               >
-                <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                <MessageCircle className="w-4 h-4 text-white fill-white/20" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>

@@ -236,9 +236,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCustomPlan }) => {
                 href={WHATSAPP_BASE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-[#0B1F33] text-[#0B1F33] rounded-md text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#0B1F33] hover:text-white"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-md text-xs font-bold uppercase tracking-wider transition-colors shadow-xs"
               >
-                <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                <MessageCircle className="w-4 h-4 text-white fill-white/20" />
                 <span>Chat directly on WhatsApp</span>
               </a>
 

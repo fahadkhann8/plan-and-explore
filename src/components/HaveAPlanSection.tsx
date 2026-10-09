@@ -157,9 +157,9 @@ Could you help curate this journey for us?`;
                   href={getCustomWhatsAppUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs uppercase tracking-widest font-bold transition-all shadow-xs active:scale-95 cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xs bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs uppercase tracking-widest font-bold transition-all shadow-md hover:shadow-lg hover:shadow-green-500/25 active:scale-95 cursor-pointer"
                 >
-                  <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                  <MessageCircle className="w-4.5 h-4.5 text-white fill-white/20" />
                   <span>Chat on WhatsApp</span>
                 </a>
 

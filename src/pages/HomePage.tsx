@@ -379,7 +379,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               rel="noopener noreferrer"
               className="apple-glass-button-whatsapp apple-glass-shine rounded-full inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 sm:py-5 text-white text-xs sm:text-sm font-bold uppercase tracking-widest cursor-pointer shadow-lg"
             >
-              <MessageCircle className="w-4 h-4 text-[#25D366]" />
+              <MessageCircle className="w-4 h-4 text-white fill-white/20" />
               <span>Chat With Us</span>
             </a>
           </div>

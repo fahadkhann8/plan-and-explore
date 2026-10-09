@@ -132,9 +132,9 @@ export const PackageDetailExperience: React.FC<PackageDetailExperienceProps> = (
                 href={getWhatsAppMessageUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[44px] bg-[#5A5A40] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#4a4a35] transition-all shadow-xs cursor-pointer justify-center"
+                className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[44px] bg-[#25D366] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#1EBE5D] transition-all shadow-md cursor-pointer justify-center rounded-xs"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
+                <MessageCircle className="w-3.5 h-3.5 text-white fill-white/20" />
                 <span>Chat on WhatsApp</span>
               </a>
             )}
@@ -364,7 +364,7 @@ export const PackageDetailExperience: React.FC<PackageDetailExperienceProps> = (
                   href={getWhatsAppMessageUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3.5 px-4 bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs uppercase tracking-widest font-bold transition-all shadow-xs active:scale-95 cursor-pointer text-center block"
+                  className="w-full py-3.5 px-4 bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs uppercase tracking-widest font-bold transition-all shadow-md active:scale-95 cursor-pointer text-center block rounded-xs"
                 >
                   Chat on WhatsApp
                 </a>
@@ -375,9 +375,9 @@ export const PackageDetailExperience: React.FC<PackageDetailExperienceProps> = (
                 href={WHATSAPP_BASE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-white hover:bg-[#FAFAF7] text-[#0B1F33] border border-[#0B1F33]/15 text-xs font-semibold tracking-wide uppercase transition-colors cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-50/50 hover:bg-emerald-100/60 text-[#075E54] border border-[#25D366]/40 text-xs font-bold tracking-wide uppercase transition-colors cursor-pointer rounded-xs"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
+                <MessageCircle className="w-3.5 h-3.5 text-[#25D366] fill-[#25D366]/20" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>

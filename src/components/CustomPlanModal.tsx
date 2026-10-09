@@ -195,9 +195,9 @@ Could you please share custom itinerary options and pricing?`;
             target="_blank"
             rel="noopener noreferrer"
             onClick={onClose}
-            className="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-sm bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs uppercase tracking-widest font-bold transition-all shadow-sm active:scale-98 min-h-[44px] cursor-pointer"
+            className="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-sm bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs uppercase tracking-widest font-bold transition-all shadow-md hover:shadow-lg hover:shadow-green-500/25 active:scale-98 min-h-[44px] cursor-pointer"
           >
-            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+            <MessageCircle className="w-4.5 h-4.5 text-white fill-white/20" />
             <span>Plan via WhatsApp &rarr;</span>
           </a>
 

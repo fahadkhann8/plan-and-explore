@@ -108,9 +108,9 @@ export const UnderConstructionModal: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleDismiss}
-            className="w-full flex items-center justify-center gap-2 py-3 px-5 border border-[#0B1F33]/20 hover:border-[#0B1F33] text-[#0B1F33] text-xs font-semibold uppercase tracking-wider rounded-xs transition-colors hover:bg-white min-h-[44px]"
+            className="w-full flex items-center justify-center gap-2 py-3 px-5 border border-[#25D366]/60 hover:border-[#25D366] bg-emerald-50/50 hover:bg-emerald-100/60 text-[#075E54] text-xs font-bold uppercase tracking-wider rounded-xs transition-colors min-h-[44px]"
           >
-            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+            <MessageCircle className="w-4 h-4 text-[#25D366] fill-[#25D366]/20" />
             <span>Chat Directly on WhatsApp</span>
           </a>
         </div>

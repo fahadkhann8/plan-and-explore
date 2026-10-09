@@ -47,9 +47,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenCustomPlan
                   href={WHATSAPP_BASE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 bg-[#5A5A40] hover:bg-[#4a4a35] text-white text-xs font-bold uppercase tracking-widest transition-all shadow-xs active:scale-95 min-h-[48px] cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2.5 py-4 px-8 rounded-xs bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:shadow-lg hover:shadow-green-500/25 active:scale-95 min-h-[48px] cursor-pointer"
                 >
-                  <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                  <MessageCircle className="w-4.5 h-4.5 text-white fill-white/20" />
                   <span>Chat on WhatsApp</span>
                 </a>
               </div>

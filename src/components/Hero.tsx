@@ -184,9 +184,9 @@ export const Hero: React.FC<HeroProps> = ({
             href={WHATSAPP_BASE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="apple-glass-button-whatsapp apple-glass-shine flex items-center gap-2 px-6 sm:px-7 py-4 sm:py-5 rounded-full text-white text-xs sm:text-sm font-semibold cursor-pointer"
+            className="apple-glass-button-whatsapp apple-glass-shine flex items-center gap-2 px-6 sm:px-7 py-4 sm:py-5 rounded-full text-white text-xs sm:text-sm font-bold tracking-wider cursor-pointer"
           >
-            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+            <MessageCircle className="w-4 h-4 text-white fill-white/20" />
             <span>WhatsApp</span>
           </a>
         </div>
