@@ -22,5 +22,7 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": ["src", "components", "lib"],
+  "exclude": ["node_modules", "dist"]
 }

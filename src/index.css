@@ -12,6 +12,10 @@
   --color-accent-olive: #5A5A40;
   --color-accent-olive-dark: #4a4a35;
   --color-accent-forest: #233E32;
+  --color-background: #FAFAF7;
+  --color-foreground: #0B1F33;
+  --color-muted: #EAE6DC;
+  --color-muted-foreground: #4F5E6E;
 }
 
 @layer base {
